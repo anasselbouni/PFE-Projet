@@ -1,0 +1,264 @@
+{% extends "layouts/base.html" %}
+{% block title %} Accueil {% endblock %}
+<!-- Content Wrapper. Contains page content -->
+{% block content %}
+
+<div class="content-wrapper" style="min-height: 1388.5px;">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div id="ajax" class="container-fluid">
+        <h2 class="text-center display-4">Enhanced Search</h2>
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-5 offset-md-1">
+                        <div class="form-group">
+                            <div class="input-group input-group-lg">
+                                <label></label>
+                                <input class="form-control form-control-lg"  type="text" name="Cat_services" id="Cat_services" list="Cat_services_list">
+                                <datalist id="Cat_services_list">
+                                    <option value="75">Administration publique </option>
+                                    <option value="69">Administration scolaire et universitaire </option>
+                                    <option value="52">Aéronautique et aérospatiale </option>
+                                    <option value="74">Affaires étrangères </option>
+                                    <option value="63">Agriculture </option>
+                                    <option value="23">Agro-alimentaire </option>
+                                    <option value="50">Architecture et urbanisme </option>
+                                    <option value="71">Armée </option>
+                                    <option value="143">Articles de luxe et bijouterie </option>
+                                    <option value="20">Articles de sport </option>
+                                    <option value="38">Arts </option>
+                                    <option value="111">Arts et artisanat </option>
+                                    <option value="39">Arts vivants </option>
+                                    <option value="90">Associations et organisations sociales et syndicales </option>
+                                    <option value="42">Assurances </option>
+                                    <option value="147">Automatismes industriels </option>
+                                    <option value="9">Avocats </option>
+                                    <option value="41">Banques </option>
+                                    <option value="85">Bibliothèques </option>
+                                    <option value="25">Biens de consommation</option>
+                                    <option value="138">Biens et équipements pour les entreprises </option>
+                                    <option value="12">Biotechnologie </option>
+                                    <option value="">Bureau exécutif </option>
+                                    <option value="106">Capital-risque et fonds LBO </option>
+                                    <option value="">Centres de recherches </option>
+                                    <option value="58">Chantiers navals </option>
+                                    <option value="54">Chimie </option>
+                                    <option value="148">Collectivités publiques et territoriales </option>
+                                    <option value="27">Commerce de détail </option>
+                                    <option value="133">Commerce de gros </option>
+                                    <option value="141">Commerce et développement international </option>
+                                    <option value="94">Compagnie aérienne/Aviation </option>
+                                    <option value="47">Comptabilité </option>
+                                    <option value="19">Confection et mode </option>
+                                    <option value="11">Conseil en management </option>
+                                    <option value="48">Construction </option>
+                                    <option value="103">Contenus rédactionnels </option>
+                                    <option value="18">Cosmétiques </option>
+                                    <option value="1">Défense et espace </option>
+                                    <option value="99">Design </option>
+                                    <option value="140">Design graphique </option>
+                                    <option value="28">Divertissements </option>
+                                    <option value="82">Édition </option>
+                                    <option value="102">Élaboration de programmes </option>
+                                    <option value="64">Élevage </option>
+                                    <option value="146">Emballages et conteneurs </option>
+                                    <option value="68">Enseignement supérieur </option>
+                                    <option value="93">Entreposage, stockage </option>
+                                    <option value="144">Environnement et énergies renouvelables </option>
+                                    <option value="122">Équipements collectifs </option>
+                                    <option value="40">Équipements et services de loisirs </option>
+                                    <option value="62">Équipements ferroviaires </option>
+                                    <option value="17">Équipements médicaux </option>
+                                    <option value="70">Études/recherche </option>
+                                    <option value="97">Études de marché </option>
+                                    <option value="123">Externalisation/délocalisation </option>
+                                    <option value="127">Films d’animation </option>
+                                    <option value="132">Formation à distance </option>
+                                    <option value="67">Formation primaire/secondaire </option>
+                                    <option value="105">Formation professionnelle et coaching </option>
+                                    <option value="51">Génie civil </option>
+                                    <option value="46">Gestion de portefeuilles </option>
+                                    <option value="100">Gestion des associations et fondations </option>
+                                    <option value="22">Grande distribution </option>
+                                    <option value="14">Hôpitaux et centres de soins </option>
+                                    <option value="31">Hôtellerie et hébergement </option>
+                                    <option value="131">Humanitaire </option>
+                                    <option value="44">Immobilier </option>
+                                    <option value="128">Immobilier commercial </option>
+                                    <option value="134">Import et export </option>
+                                    <option value="83">Imprimerie, reproduction </option>
+                                    <option value="53">Industrie automobile </option>
+                                    <option value="61">Industrie bois et papiers </option>
+                                    <option value="112">Industrie composants électriques/électroniques</option>
+                                    <option value="35">Industrie du cinéma </option>
+                                    <option value="15">Industrie pharmaceutique </option>
+                                    <option value="60">Industrie textile </option>
+                                    <option value="101">Ingénierie du mécénat </option>
+                                    <option value="135">Ingénierie mécanique ou industrielle </option>
+                                    <option value="73">Institutions judiciaires </option>
+                                    <option value="89">Institutions religieuses </option>
+                                    <option value="6">Internet </option>
+                                    <option value="29">Jeux d’argent et casinos</option>
+                                    <option value="109">Jeux électroniques </option>
+                                    <option value="4">Logiciels informatiques </option>
+                                    <option value="116">Logistique et chaîne d’approvisionnement </option>
+                                    <option value="30">Loisirs, voyages et tourisme </option>
+                                    <option value="55">Machines et équipements </option>
+                                    <option value="129">Marchés des capitaux </option>
+                                    <option value="80">Marketing et publicité </option>
+                                    <option value="49">Matériaux de construction </option>
+                                    <option value="3">Matériel informatique </option>
+                                    <option value="59">Matières premières </option>
+                                    <option value="125">Médecines alternatives </option>
+                                    <option value="113">Médias en ligne </option>
+                                    <option value="36">Médias radio et télédiffusés </option>
+                                    <option value="87">Messageries et fret </option>
+                                    <option value="26">Meubles </option>
+                                    <option value="56">Mines et métaux </option>
+                                    <option value="37">Musées et institutions culturelles </option>
+                                    <option value="115">Musique </option>
+                                    <option value="114">Nanotechnologies </option>
+                                    <option value="110">Organisation d’événements </option>
+                                    <option value="107">Parti politique </option>
+                                    <option value="66">Pêche </option>
+                                    <option value="57">Pétrole et énergie </option>
+                                    <option value="136">Photographie </option>
+                                    <option value="117">Plastiques </option>
+                                    <option value="77">Police/gendarmerie </option>
+                                    <option value="79">Politiques publiques </option>
+                                    <option value="81">Presse écrite </option>
+                                    <option value="126">Production audiovisuelle </option>
+                                    <option value="24">Produits électroniques grand public </option>
+                                    <option value="13">Professions médicales </option>
+                                    <option value="104">Recrutement </option>
+                                    <option value="120">Règlement extrajudiciaire de conflits </option>
+                                    <option value="98">Relations publiques et communication </option>
+                                    <option value="5">Réseaux informatiques </option>
+                                    <option value="137">Ressources humaines </option>
+                                    <option value="32">Restaurants </option>
+                                    <option value="34">Restauration collective </option>
+                                    <option value="124">Santé, forme et bien-être </option>
+                                    <option value="65">Secteur laitier </option>
+                                    <option value="139">Secteur médico-psychologique </option>
+                                    <option value="78">Sécurité civile </option>
+                                    <option value="121">Sécurité et enquêtes </option>
+                                    <option value="118">Sécurité informatique et des réseaux </option>
+                                    <option value="7">Semi-conducteurs </option>
+                                    <option value="88">Services à la personne </option>
+                                    <option value="91">Services aux consommateurs </option>
+                                    <option value="84">Services d’information </option>
+                                    <option value="45">Services d’investissement </option>
+                                    <option value="43">Services financiers </option>
+                                    <option value="10">Services juridiques </option>
+                                    <option value="86">Services pour l’environnement </option>
+                                    <option value="33">Sports </option>
+                                    <option value="21">Tabac </option>
+                                    <option value="96">Technologies et services de l’information </option>
+                                    <option value="119">Technologies sans fil </option>
+                                    <option value="8">Télécommunications </option>
+                                    <option value="108">Traduction et adaptation </option>
+                                    <option value="95">Transports maritimes </option>
+                                    <option value="92">Transports routiers et ferroviaires </option>
+                                    <option value="145">Verres, céramiques et ciments </option>
+                                    <option value="16">Vétérinaire </option>
+                                    <option value="142">Vins et spiritueux </option>
+                                </datalist>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 offset-md-1">
+                        <div class="form-group">
+                            <div class="input-group input-group-lg">
+                                <label></label>
+                                <textarea id="number" class="form-control form-control-lg" ></textarea>
+                                <div class="input-group-append">
+                                    <input id="ajax-call" type="submit" class="btn btn-lg btn-default">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="row mt-3">
+                <div class="col-md-10 offset-md-1">
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col px-4">
+                                    <div>
+                                        <div class="float-right">2021-04-20 04:04pm</div>
+                                        <h3>Lorem ipsum dolor sit amet</h3>
+                                        <p class="mb-0">consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <img class="img-fluid" src="../../dist/img/photo1.png" alt="Photo" style="max-height: 160px;">
+                                </div>
+                                <div class="col px-4">
+                                    <div>
+                                        <div class="float-right">2021-04-20 10:14pm</div>
+                                        <h3>Lorem ipsum dolor sit amet</h3>
+                                        <p class="mb-0">consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <iframe width="240" height="160" src="https://www.youtube.com/embed/WEkSYw3o5is?controls=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="border-0" allowfullscreen=""></iframe>
+                                </div>
+                                <div class="col px-4">
+                                    <div>
+                                        <div class="float-right">2021-04-20 11:54pm</div>
+                                        <h3>Lorem ipsum dolor sit amet</h3>
+                                        <p class="mb-0">consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+  </div>
+  <script>
+    document.querySelector("#ajax-call").addEventListener("click", event => {
+        var inputTextValue;
+        number = document.querySelector('#number').value;
+        Cat_services = document.querySelector('#Cat_services').value;
+        console.log(inputTextValue);
+        event.preventDefault();
+        let formData = new FormData();
+        formData.append('number', number);
+        formData.append('Cat_services', Cat_services);
+        let csrfTokenValue = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const request = new Request('{% url "compute" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {'X-CSRFToken' : csrfTokenValue}
+        });
+        fetch(request)
+            .then(response => response.text())
+            .then(result => {
+                  const resultElement = document.querySelector("#ajax");
+                  console.log(result);
+                  document.getElementById("ajax").innerHTML += result
+            })
+    })
+  </script>
+{% endblock content %}
+<!-- /.content-wrapper -->
