@@ -7,10 +7,16 @@ from selenium import webdriver
 from time import sleep
 from linkedin_api import Linkedin
 from bs4 import BeautifulSoup
+from selenium.webdriver.common.keys import Keys
 
+
+counter = 0
+li_us = 'elmotaouakilmehdi@gmail.com'
+li_pa = 'ENSA@2022'
 
 def driver_sele():
     driver_options = webdriver.ChromeOptions()
+    driver_options.add_argument("user-data-dir=C:\\Users\\Administrateur\\AppData\\Local\\Google\\Chrome\\User Data\\Default")
     sleep(3)
     driver = webdriver.Chrome(ChromeDriverManager().install(), options=driver_options)
     return driver
@@ -31,13 +37,13 @@ def find_between_r( s, first, last ):
     except ValueError:
         return ""
 
-def profile_lookup(profile):
-    api = Linkedin('anasselbouni@hotmail.com', 'Bim@1997')
-    profile = api.get_profile("{}".format(profile))
-    return profile
+def profile_lookup(li_us, li_pa,profile):
+    api = Linkedin(li_us, li_pa)
+    profil = api.get_profile("{}".format(profile))
 
-def login(li_us, li_pa):
-    driver = driver_sele()
+    return profil
+
+def login(li_us, li_pa,driver):
     driver.get("https://www.linkedin.com/login/fr?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin")
     sleep(2)
     username = driver.find_element_by_id("username")
@@ -49,52 +55,38 @@ def login(li_us, li_pa):
 
     sleep(2)
 
-def Scrapping_script(page):
-
-    driver = driver_sele()
-    sleep(5)
+def Scrapping_script(keyword,industr):
     experience = pd.DataFrame()
     skills = pd.DataFrame()
     education = pd.DataFrame()
     profiles = pd.DataFrame()
-    industry = "industry=%5B%224%22%5D&origin=FACETED_SEARCH"
-    schoolFilter = "schoolFilter=%5B%222475568%22%5D"
-    serviceCategory = "serviceCategory=%5B%2260 2%22%5D&sid=a%2CD"
-    page = "page={}".format(page)
-    base = "https://www.linkedin.com/search/results/people/?"
-    link = '{}{}&{}&{}&{}'.format(base, industry, schoolFilter, serviceCategory, page)
-    driver.get(link)
-    sleep(3)
 
-    # link = driver.find_element_by_xpath("/html/body/div[5]/div[3]/div[2]/div/div[1]/main/div/div/div[1]/ul/li[1]/div/div/div[2]/div[1]/div[1]/div/span[1]/span/a").get_attribute('href')
-    # link = driver.find_element_by_xpath("//*[@id='main']/div/div/div[1]/ul/li[1]/div/div/div[2]/div[1]/div[1]/div/span[1]/span/a").get_attribute('href')
-    linktest = driver.find_element_by_xpath("//*[@id='main']/div/div/div[1]/ul")
-    page_source = driver.page_source
-    soup = BeautifulSoup(page_source, 'lxml')
-    reviews_selector = soup.find_all('ul', class_='reusable-search__entity-result-list')
+
+    if industr == '' and keyword != '':
+        keywords = '{} linkedin maroc site:https://www.linkedin.com/in/'.format(keyword)
+    if industr != '' and keyword == '':
+        keywords = '{} linkedin maroc site:https://www.linkedin.com/in/'.format(industr)
+    if industr != '' and keyword != '':
+        keywords = '{} {} linkedin maroc site:https://www.linkedin.com/in/'.format(industr, keyword)
+
+    from duckduckgo_search import ddg
     profilesnames = []
-    for td in reviews_selector[0].find_all("li"):
-        # remove any newlines and extra spaces from left and right
-        # headings.append(td.b.text.replace('\n', ' ').strip())
-
-        for a in td.find_all("a", class_='app-aware-link', href=True):
-            href = find_between_r(a['href'], "https://www.linkedin.com/in/", "?miniProfileUrn")
-            if href != '':
-                profilesnames.append(href)
+    results = ddg(keywords, region='ma-ma', max_results=900)
+    print(results[0]['href'])
+    for td in results:
+        href = find_between_r(td['href'], "https://www.linkedin.com/in/", "")
+        if href != '':
+            profilesnames.append(href)
     profilesnames = list(dict.fromkeys(profilesnames))
     print(profilesnames)
-
-    # profilenam = find_between_r( link, "https://www.linkedin.com/in/", "?miniProfileUrn" )
 
     a, b, c, d = 0, 0, 0, 0
 
     sleep(5)
 
-    for i in profilesnames:
-
-        print(i)
-        profil = profile_lookup(i)
-        print(profil)
+    for vanityname in profilesnames:
+        #try:
+        profil = profile_lookup(li_us, li_pa, vanityname)
         a = a + 1
         try:
             location = profil['geoLocationName'] + ' ' + profil['geoCountryName'],
@@ -106,21 +98,42 @@ def Scrapping_script(page):
                     location = profil['geoCountryName']
                 except:
                     location = ''
+        print(profil['firstName'] + ' ' + profil['lastName'])
         profiles = profiles.append(
             {
-                'id': a,
+                'id': vanityname,
                 'Nom': profil['firstName'] + ' ' + profil['lastName'],
                 'headline': profil['headline'],
                 'location': location,
-                'Lien Linkedin': ' https://www.linkedin.com/in/{}'.format(i)
+                'Lien Linkedin': ' https://www.linkedin.com/in/{}'.format(vanityname)
             }, ignore_index=True
         )
 
         for i in profil['experience']:
             try:
-                endate = '{}/{}'.format(i['timePeriod']['endDate']['month'], i['timePeriod']['endDate']['year'])
+                if i['timePeriod']['endDate']['month'] == '' and i['timePeriod']['endDate']['year'] == '':
+                    endate = ''
+                if i['timePeriod']['endDate']['month'] == '' and i['timePeriod']['endDate']['year'] != '':
+                    endate = '{}'.format(i['timePeriod']['endDate']['year'])
+                if i['timePeriod']['endDate']['month'] != '' and i['timePeriod']['endDate']['year'] == '':
+                    endate = '{}'.format(i['timePeriod']['endDate']['month'])
+                if i['timePeriod']['endDate']['month'] != '' and i['timePeriod']['endDate']['year'] != '':
+                    endate = '{}/{}'.format(i['timePeriod']['endDate']['month'], i['timePeriod']['endDate']['year'])
             except:
                 endate = ''
+
+            try:
+                if i['timePeriod']['startDate']['month'] == '' and i['timePeriod']['startDate']['year'] == '':
+                    startDate = ''
+                if i['timePeriod']['startDate']['month'] == '' and i['timePeriod']['startDate']['year'] != '':
+                    startDate = '{}'.format(i['timePeriod']['startDate']['year'])
+                if i['timePeriod']['startDate']['month'] != '' and i['timePeriod']['startDate']['year'] == '':
+                    startDate = '{}'.format(i['timePeriod']['startDate']['month'])
+                if i['timePeriod']['startDate']['month'] != '' and i['timePeriod']['startDate']['year'] != '':
+                    startDate = '{}/{}'.format(i['timePeriod']['startDate']['month'],
+                                               i['timePeriod']['startDate']['year'])
+            except:
+                startDate = ''
 
             try:
                 exp = i['geoLocationName']
@@ -134,21 +147,18 @@ def Scrapping_script(page):
 
             experience = experience.append(
                 {
-                    'id': b + 1,
-                    'PersonID': a,
+                    'PersonID': vanityname,
                     'title': i['title'],
                     'locationName': exp,
                     'companyName': companyName,
-                    'startdate': '{}/{}'.format(i['timePeriod']['startDate']['month'],
-                                                i['timePeriod']['startDate']['year']),
+                    'startdate': startDate,
                     'endDate': endate,
                 }, ignore_index=True
             )
         for i in profil['skills']:
             skills = skills.append(
                 {
-                    'id': c + 1,
-                    'PersonID': a,
+                    'PersonID': vanityname,
                     'skill': i['name'],
                 }, ignore_index=True
             )
@@ -172,7 +182,7 @@ def Scrapping_script(page):
             education = education.append(
                 {
                     'id': d + 1,
-                    'PersonID': a,
+                    'PersonID': vanityname,
                     'degreeName': degreeName,
                     'schoolName': i['schoolName'],
                     'fieldOfStudy': fieldOfStudy,
@@ -180,15 +190,13 @@ def Scrapping_script(page):
                     'endDate': endate,
                 }, ignore_index=True
             )
+        #except:
+            #pass
 
-    print(profiles)
-    print(experience)
-    print(skills)
-    print(education)
 
-counter = 0
-li_us = 'anasselbouni@hotmail.com'
-li_pa = 'Bim@1997'
+
+    return profiles, experience, skills, education
+
 
 
 def index(request):
@@ -197,32 +205,42 @@ def index(request):
 
 def recherche(request):
 
-    if request =='rerere':
-
-        page = 0
-        while counter == 0:
-
-            driver = driver_sele()
-            try:
-                login(li_us, li_pa)
-                page = page + 1
-                Scrapping_script(page)
-            except:
-                driver.close()
     return render(request, 'rech.html')
 
 @csrf_exempt
 def compute(request):
-    number = request.POST.get("number")
-    Cat_services = request.POST.get("Cat_services")
-    print(Cat_services)
+    keyword = request.POST.get("keyword")
+    industr = request.POST.get("Cat_services")
+    if keyword == '':
+        print("null")
+    print(keyword)
+    print(industr)
+
     try:
-        context = {
-            'jsres': 'test'
-        }
-    except:
-        context = {
-            'jsres': 0
-        }
+        profiles, experience, skills, education = Scrapping_script(keyword,industr)
+        print(profiles)
+        print(experience)
+        print(skills)
+        print(education)
+    except Exception as e: print(e)
+
+    context = {
+    }
+
+    return render(request, 'result.html', context)
+
+@csrf_exempt
+def idsearch(request):
+    username = request.POST.get("username")
+    if username == '':
+        print("null")
+    print(username)
+
+    try:
+        tt = profile_lookup(li_us, li_pa, username)
+    except Exception as e: print(e)
+
+    context = {
+    }
 
     return render(request, 'result.html', context)
