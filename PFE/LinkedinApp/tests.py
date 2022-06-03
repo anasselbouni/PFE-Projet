@@ -64,6 +64,7 @@ def profile_compilation(profilesnames):
             profiles = profiles.append(
                 {
                     'id': vanityname,
+                    'sector': industr,
                     'Nom': profil['firstName'] + ' ' + profil['lastName'],
                     'headline': profil['headline'],
                     'location': location,
@@ -231,7 +232,7 @@ def profile_compilation(profilesnames):
         except:
             pass
         print('waiting....')
-        sleep(300)
+        sleep(200)
 
 
 try:
