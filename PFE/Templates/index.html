@@ -24,20 +24,61 @@
   <section class="content">
     <div class="container-fluid">
 
-      <div class="row">
-              <div class="col-xl-6 col-md-12">
-                <label for="id_secteur">Secteur</label>
-                <input type="text" class="form-control form-pop" name="secteur" id="id_secteur" required>
-              </div>
-              <div class="col-xl-6 col-md-12">
-                <label for="id_titre">Titre</label>
-                <input type="text" class="form-control form-pop" name="titre" id="id_titre" required>
-              </div>
-              <div class="col-xl-6 col-md-12">
-                <label for="id_pays">Pays</label>
-                <input type="text" class="form-control form-pop" name="pays" id="id_pays" required>
-              </div>
+        <div class="row">
+          <div class="col-xl-6 col-md-12">
+            <label for="id_secteur">Secteur</label>
+            <input type="text" list="secteur_list" class="form-control form-pop" name="secteur" id="id_secteur" >
+            <datalist id="secteur_list">
+              {% for i in secteurs %}
+              <option value="{{ i }}">
+              {% endfor %}
+            </datalist>
+          </div>
+          <div class="col-xl-6 col-md-12">
+            <label for="id_titre">Titre</label>
+            <input type="text" list="titre_list" class="form-control form-pop" name="titre" id="id_titre" >
+            <datalist id="titre_list">
 
+              {% for i in titres %}
+              <option value="{{ i }}">
+              {% endfor %}
+            </datalist>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-6 col-md-12">
+            <label for="id_ville">Ville</label>
+            <input type="text" list="ville_list" class="form-control form-pop" name="ville" id="id_ville" >
+            <datalist id="ville_list">
+
+              {% for i in villes %}
+              <option value="{{ i }}">
+              {% endfor %}
+            </datalist>
+          </div>
+          <div class="col-xl-6 col-md-12">
+            <label for="id_degree">Diplome</label>
+            <input type="text" list="degree_list" class="form-control form-pop" name="degree" id="id_degree" >
+            <datalist id="degree_list">
+
+              {% for i in diplomes %}
+              <option value="{{ i }}">
+              {% endfor %}
+            </datalist>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-6 col-md-12">
+            <label for="id_competence">Compétences</label>
+            <input type="text" list="competence_list" class="form-control form-pop" name="competence" id="id_competence" >
+            <datalist id="competence_list">
+              <option value="Edge">
+            </datalist>
+          </div>
+          <div class="col-xl-3 col-md-12">
+            <label for="id_experience">Experience (nombres d'années)</label>
+            <input type="number" class="form-control form-pop" name="experience" id="id_experience" >
+          </div>
         </div>
       </div>
       <hr>
