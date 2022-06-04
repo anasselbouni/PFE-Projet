@@ -112,6 +112,8 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
+DB_NAME = 'mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/mongo'
+
 USE_I18N = True
 
 USE_TZ = True
