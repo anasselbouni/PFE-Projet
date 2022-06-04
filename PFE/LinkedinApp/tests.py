@@ -14,7 +14,7 @@ def find_between_r( s, first, last ):
 a, b, c, d = 0, 0, 0, 0
 li_us = 'elmotaouakilmehdi@gmail.com'
 li_pa = 'ENSA@2022'
-industr = "Logiciels informatiques"
+industr = "Design graphique"
 keyword = ""
 
 if industr == '' and keyword != '':
