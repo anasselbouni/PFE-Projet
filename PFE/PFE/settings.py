@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'LinkedinApp'
+    'LinkedinApp',
 ]
 
 MIDDLEWARE = [
@@ -76,13 +76,14 @@ WSGI_APPLICATION = 'PFE.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+       'default': {
+           'ENGINE': 'djongo',
+           'NAME': 'mongo',
+       }
+   }
+
+
 
 
 # Password validation
@@ -110,6 +111,8 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
+
+DB_NAME = 'mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/mongo'
 
 USE_I18N = True
 
