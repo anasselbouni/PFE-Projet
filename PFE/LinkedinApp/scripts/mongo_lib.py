@@ -17,25 +17,30 @@ class mongo_manager:
                                      )
         return client
 
-    def prepare_data(self,**kwargs):
+    def kwargs_to_doc(self,**kwargs):
         data={}
         for key,value in kwargs:
             data[key]=value
-
         return data
 
 
-    def create_collection(self,name,data=dict):
+    def create_collection(self,name):
         dbname=self.dbname
         collection_name = dbname[name]
-        collection_name.insert(data)
-        return True
+        return collection_name
     def get_collection(self,name):
         dbname=self.dbname
         collection_name = dbname[name]
         return collection_name
+    def insert(self,collection,data=dict):
+        collection_name=collection
+        collection_name.insert(data)
+        return True
+    def insert_many(self,collection,data=list):
+        collection_name=collection
+        collection_name.insert_many(data)
+        return True
 
 
-m=mongo_manager('account')
 
-print(m.dbname)
+
