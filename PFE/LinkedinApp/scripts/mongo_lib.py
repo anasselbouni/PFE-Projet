@@ -19,10 +19,7 @@ class mongo_manager:
         for key,value in kwargs:
             data[key]=value
         return data
-    def df_to_doc(self,collection,dataframe):
-        l_d=dataframe.to_dict('records')
-        self.insert_many(collection,l_d)
-        return True
+
 
     def create_collection(self,name):
         dbname=self.dbname
@@ -40,6 +37,12 @@ class mongo_manager:
     def insert_many(self,collection,data):
         collection_name=collection
         collection_name.insert_many(data)
+        return True
+
+
+    def df_to_doc(self,collection,dataframe):
+        l_d=dataframe.to_dict('records')
+        self.insert_many(collection,l_d)
         return True
 
 
