@@ -1,3 +1,32 @@
-from multiprocessing import Process
+from duckduckgo import ddg_manager
+from linkd_api import linkedin_manager
+from mongo_lib import mongo_manager
+from time import sleep
+import multiprocessing
+
+
+
+
+
+if __name__  == '__main__':
+    manager = multiprocessing.Manager()
+    return_dict = manager.dict()
+    ind='graphic design'
+    mdb_m=mongo_manager('mongo')
+    accounts_c=mdb_m.get_collection('LinkedinApp_linkedin_account')
+    print(accounts_c)
+
+    d_m=ddg_manager('site:https://www.linkedin.com/in/','ma-ma')
+    results=d_m.search('',ind,10)
+    print('linkdin')
+    v_n=d_m.parse('https://www.linkedin.com/in/',results)
+    l_m=linkedin_manager(accounts_c,ind,v_n)
+    dfs=l_m.profile_compilation(v_n,return_dict)
+    # p1=multiprocessing.Process(target=l_m.profile_compilation,args=(v_n,return_dict))
+    # p1.start()
+    # p1.join()
+
+
+
 
 

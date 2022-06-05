@@ -1,5 +1,5 @@
 from duckduckgo_search import ddg
-from .general import find_between_r
+from general import find_between_r
 
 class ddg_manager:
     def __init__(self,url,region):
@@ -29,5 +29,6 @@ class ddg_manager:
             else:pass
         print(r_)
         return r_
+
 
 

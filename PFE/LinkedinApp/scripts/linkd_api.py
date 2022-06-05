@@ -25,7 +25,7 @@ class linkedin_manager:
         return profil
 
 
-    def profile_compilation(self,profilesnames):
+    def profile_compilation(self,profilesnames,return_dict):
         a, b, c, d = 0, 0, 0, 0
         experience = pd.DataFrame()
         skills = pd.DataFrame()
@@ -58,6 +58,7 @@ class linkedin_manager:
 
                 for i in profil['experience']:
                     try:
+                        endate = ''
                         if i['timePeriod']['endDate']['month'] == '' and i['timePeriod']['endDate']['year'] == '':
                             endate = ''
                         if i['timePeriod']['endDate']['month'] == '' and i['timePeriod']['endDate']['year'] != '':
@@ -70,6 +71,7 @@ class linkedin_manager:
                         endate = ''
 
                     try:
+                        startDate = ''
                         if i['timePeriod']['startDate']['month'] == '' and i['timePeriod']['startDate']['year'] == '':
                             startDate = ''
                         if i['timePeriod']['startDate']['month'] == '' and i['timePeriod']['startDate']['year'] != '':
@@ -128,7 +130,6 @@ class linkedin_manager:
                         startdate = ''
                     education = education.append(
                         {
-                            'id': d + 1,
                             'PersonID': vanityname,
                             'degreeName': degreeName,
                             'schoolName': i['schoolName'],
@@ -138,83 +139,14 @@ class linkedin_manager:
                         }, ignore_index=True
                     )
 
-                try:
-                    df2 = pd.read_excel('data.xlsx', sheet_name='profiles', index_col=0)
 
-                    df3 = profiles.append(df2)
 
-                    with pd.ExcelWriter("data.xlsx",
-                                        mode="a",
-                                        engine="openpyxl",
-                                        if_sheet_exists="overlay",
-                                        ) as writer:
-                        df3.to_excel(writer, sheet_name="profiles")
-                except:
-                    with pd.ExcelWriter("data.xlsx",
-                                        mode="a",
-                                        engine="openpyxl",
-                                        if_sheet_exists="overlay",
-                                        ) as writer:
-                        profiles.to_excel(writer, sheet_name="profiles")
 
-                try:
-                    df2 = pd.read_excel('data.xlsx', sheet_name='experience', index_col=0)
-
-                    df3 = experience.append(df2)
-
-                    with pd.ExcelWriter("data.xlsx",
-                                        mode="a",
-                                        engine="openpyxl",
-                                        if_sheet_exists="overlay",
-                                        ) as writer:
-                        df3.to_excel(writer, sheet_name="experience")
-                except:
-                    with pd.ExcelWriter("data.xlsx",
-                                        mode="a",
-                                        engine="openpyxl",
-                                        if_sheet_exists="overlay",
-                                        ) as writer:
-                        experience.to_excel(writer, sheet_name="experience")
-
-                try:
-                    df2 = pd.read_excel('data.xlsx', sheet_name='experience', index_col=0)
-
-                    df3 = education.append(df2)
-
-                    with pd.ExcelWriter("data.xlsx",
-                                        mode="a",
-                                        engine="openpyxl",
-                                        if_sheet_exists="overlay",
-                                        ) as writer:
-                        df3.to_excel(writer, sheet_name="education")
-                except:
-                    with pd.ExcelWriter("data.xlsx",
-                                        mode="a",
-                                        engine="openpyxl",
-                                        if_sheet_exists="overlay",
-                                        ) as writer:
-                        education.to_excel(writer, sheet_name="education")
-
-                try:
-                    df2 = pd.read_excel('data.xlsx', sheet_name='experience', index_col=0)
-
-                    df3 = skills.append(df2)
-
-                    with pd.ExcelWriter("data.xlsx",
-                                        mode="a",
-                                        engine="openpyxl",
-                                        if_sheet_exists="overlay",
-                                        ) as writer:
-                        df3.to_excel(writer, sheet_name="skills")
-                except:
-                    with pd.ExcelWriter("data.xlsx",
-                                        mode="a",
-                                        engine="openpyxl",
-                                        if_sheet_exists="overlay",
-                                        ) as writer:
-                        skills.to_excel(writer, sheet_name="skills")
             except:
                 pass
             print('waiting....')
 
-            sleep(random.randint(100,200))
+            # sleep(random.randint(100,200))
+
+        return_dict[[{'experience':experience},{'education':education},{'profiles':profiles},{'skills':skills},]] = [{'experience':experience},{'education':education},{'profiles':profiles},{'skills':skills},]
+

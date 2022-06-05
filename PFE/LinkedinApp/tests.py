@@ -33,7 +33,7 @@ for td in results:
     href = find_between_r(td['href'], "https://www.linkedin.com/in/", "")
     if href != '':
         profilesname_list.append(href)
-profilesname_list = list(dict.fromkeys(profilesname_list))
+profilesname = list(dict.fromkeys(profilesname_list))
 print(profilesname_list)
 
 def profile_lookup(li_us, li_pa,vanityname):

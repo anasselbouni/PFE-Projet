@@ -1,16 +1,15 @@
 import pymongo
 
+import pprint
 
 class mongo_manager:
     def __init__(self,db_name):
-        self.connect= self.get_client('localhost',27017,'username','password')
+        self.connect= self.get_client('localhost',27017)
         self.dbname = self.connect[db_name]
 
-    def get_client(self,host, port, username, password):
+    def get_client(self,host, port):
         client = pymongo.MongoClient(host=host,
                                      port=int(port),
-                                     username=username,
-                                     password=password
                                      )
         return client
 
@@ -25,10 +24,18 @@ class mongo_manager:
         dbname=self.dbname
         collection_name = dbname[name]
         return collection_name
+
     def get_collection(self,name):
         dbname=self.dbname
         collection_name = dbname[name]
-        return collection_name
+        cursor = collection_name.find()
+        r=[]
+        for _ in cursor:
+            r.append(_)
+            print(_)
+
+        return r
+
     def insert(self,collection,data):
         collection_name=collection
         collection_name.insert(data)
