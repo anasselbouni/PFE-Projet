@@ -25,6 +25,9 @@ for account in accounts:
 l_m = linkedin_manager(accounts=accounts_list)
 #############################################
 
+
+
+
 # essential entity models downloads
 nltk.downloader.download('maxent_ne_chunker')
 nltk.downloader.download('words')
