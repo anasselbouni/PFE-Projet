@@ -6,7 +6,7 @@ from time import sleep
 from proxy_list import get_proxies
 
 class linkedin_manager:
-    def __init__(self,accounts,industr,pl,prx=None):
+    def __init__(self,accounts=None,industr=None,pl=None,prx=None):
         self.accounts=accounts
         self.industr=industr
         self.pl=pl
@@ -23,9 +23,10 @@ class linkedin_manager:
                 print(li_pa)
                 if self.proxy != None:
 
-                    api = Linkedin(li_us,li_pa)
-                else:
                     api = Linkedin(li_us,li_pa,proxies=self.proxy)
+                else:
+                    api = Linkedin(li_us,li_pa)
+
 
 
                 profil = api.get_profile(vanityname)
