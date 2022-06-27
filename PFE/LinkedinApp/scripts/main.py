@@ -8,6 +8,8 @@ import multiprocessing
 
 
 
+
+
 if __name__  == '__main__':
     manager = multiprocessing.Manager()
     return_dict = manager.dict()
@@ -15,13 +17,12 @@ if __name__  == '__main__':
     mdb_m=mongo_manager('mongo')
     accounts_c=mdb_m.get_collection('LinkedinApp_linkedin_account')
     print(accounts_c)
-
-    d_m=ddg_manager('site:https://www.linkedin.com/in/','ma-ma')
-    results=d_m.search('',ind,10)
+    d_m=ddg_manager('site:linkedin.com allinurl:["/in/"]','ma-ma')
+    results=d_m.search('',ind,200)
     print('linkdin')
     v_n=d_m.parse('https://www.linkedin.com/in/',results)
     l_m=linkedin_manager(accounts_c,ind,v_n)
-    dfs=l_m.profile_compilation(v_n,return_dict)
+    dfs=l_m.profile_compilation(return_dict)
     # p1=multiprocessing.Process(target=l_m.profile_compilation,args=(v_n,return_dict))
     # p1.start()
     # p1.join()

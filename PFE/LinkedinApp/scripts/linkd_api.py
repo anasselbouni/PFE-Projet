@@ -1,39 +1,54 @@
+import requests
 from linkedin_api import Linkedin
 import pandas as pd
 import random
 from time import sleep
+from proxy_list import get_proxies
 
 class linkedin_manager:
-    def __init__(self,accounts,industr,vanityname):
+    def __init__(self,accounts,industr,pl,prx=None):
         self.accounts=accounts
         self.industr=industr
-        self.vanityname=vanityname
+        self.pl=pl
+        self.proxy=prx
 
-    def profile_lookup(self):
-        vanityname=self.vanityname
+    def profile_lookup(self,vanityname):
+
         profil={'has not been lookup':vanityname}
         for account in self.accounts:
             try:
-                li_us=account['email']
-                li_pa=account['password']
-                api = Linkedin(li_us, li_pa)
+                li_us=str(account['email'])
+                print(li_us)
+                li_pa=str(account['password'])
+                print(li_pa)
+                if self.proxy != None:
+
+                    api = Linkedin(li_us,li_pa)
+                else:
+                    api = Linkedin(li_us,li_pa,proxies=self.proxy)
+
+
                 profil = api.get_profile(vanityname)
                 break
-            except:
-                pass
+            except requests.RequestException:
+                print('session')
+        print(profil)
 
         return profil
 
 
-    def profile_compilation(self,profilesnames,return_dict):
+    def profile_compilation(self,return_dict):
         a, b, c, d = 0, 0, 0, 0
         experience = pd.DataFrame()
         skills = pd.DataFrame()
         education = pd.DataFrame()
         profiles = pd.DataFrame()
-        for vanityname in profilesnames:
+        for vanityname in self.pl:
+            print(vanityname)
             try:
-                profil = self.profile_lookup()
+
+                profil = self.profile_lookup(vanityname)
+                print('pl')
                 try:
                     location = profil['geoLocationName'] + ' ' + profil['geoCountryName'],
                 except:
