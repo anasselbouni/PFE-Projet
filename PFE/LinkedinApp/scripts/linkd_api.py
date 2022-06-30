@@ -3,7 +3,7 @@ from linkedin_api import Linkedin
 import pandas as pd
 import random
 from time import sleep
-from proxy_list import get_proxies
+from .proxy_list import get_proxies
 
 class linkedin_manager:
     def __init__(self,accounts=None,industr=None,pl=None,prx=None):

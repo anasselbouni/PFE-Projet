@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render
 import pandas as pd
 from django.views.decorators.csrf import csrf_exempt
@@ -10,7 +10,7 @@ import nltk
 import spacy
 from .models import linkedin_account
 
-from scripts.linkd_api import linkedin_manager
+from .scripts.linkd_api import linkedin_manager
 
 
 ########link###########################
@@ -18,7 +18,7 @@ accounts=linkedin_account.objects.all()
 accounts_list=[]
 for account in accounts:
     ac_dict={}
-    ac_dict['username']=account.username
+    ac_dict['username']=account.email
     ac_dict['password']=account.password
     print(ac_dict)
     accounts_list.append(ac_dict)
@@ -84,10 +84,9 @@ def idsearch(request):
 
 @csrf_exempt
 def id_search_ajax(request):
-    #
-
     if request.methods == 'POST':
         id=request.POST.get('l_u_i')
-        #
+        prfl=l_m.profile_lookup(id)
+        return JsonResponse(prfl,safe=False)
     else :
         return HttpResponse(content='method not allowed ',status=400)
