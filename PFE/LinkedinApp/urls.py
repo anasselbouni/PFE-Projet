@@ -8,6 +8,7 @@ urlpatterns = [
     path('compute/', views.compute, name='compute'),
     path('idsearch/', views.idsearch, name='idsearch'),
     path('ajax/idsearch/', views.id_search_ajax, name='id_search_ajax'),
+    path('ajax/mass/search/', views.mass_search, name='mass_search'),
 
 
 ]
