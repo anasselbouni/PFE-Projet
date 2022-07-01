@@ -162,7 +162,7 @@ class linkedin_manager:
                 pass
             print('waiting....')
 
-            # sleep(random.randint(100,200))
+            # sleep(random.randint(70,100))
 
         return_dict[[{'experience':experience},{'education':education},{'profiles':profiles},{'skills':skills},]] = [{'experience':experience},{'education':education},{'profiles':profiles},{'skills':skills},]
-
+        return return_dict

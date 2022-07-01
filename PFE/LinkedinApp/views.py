@@ -5,13 +5,12 @@ from django.views.decorators.csrf import csrf_exempt
 from time import sleep
 from linkedin_api import Linkedin
 from bs4 import BeautifulSoup
-from PFE.settings import BASE_DIR
 import nltk
 import spacy
 from .models import linkedin_account
-
 from .scripts.linkd_api import linkedin_manager
-
+import os
+from PFE.settings import BASE_DIR
 
 ########link###########################
 accounts=linkedin_account.objects.all()
@@ -95,4 +94,9 @@ def id_search_ajax(request):
 def mass_search(request):
     if request.method == 'POST':
         sector=request.POST.get('sector')
-        Country=request.POST.get('Country')
+        try :
+            os.system(f'python3 {BASE_DIR}/scripts/main.py {sector}')
+        except Exception:
+            print(Exception)
+    else :
+        return HttpResponse(content='method not allowed ',status=400)
