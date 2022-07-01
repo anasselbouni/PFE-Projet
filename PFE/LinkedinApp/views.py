@@ -84,9 +84,15 @@ def idsearch(request):
 
 @csrf_exempt
 def id_search_ajax(request):
-    if request.methods == 'POST':
+    if request.method == 'POST':
         id=request.POST.get('l_u_i')
         prfl=l_m.profile_lookup(id)
         return JsonResponse(prfl,safe=False)
     else :
         return HttpResponse(content='method not allowed ',status=400)
+
+@csrf_exempt
+def mass_search(request):
+    if request.method == 'POST':
+        sector=request.POST.get('sector')
+        Country=request.POST.get('Country')
