@@ -16,8 +16,9 @@ class linkedin_manager:
 
         profil={'has not been lookup':vanityname}
         for account in self.accounts:
+            print(account)
             try:
-                li_us=str(account['email'])
+                li_us=str(account['username'])
                 print(li_us)
                 li_pa=str(account['password'])
                 print(li_pa)
@@ -32,7 +33,7 @@ class linkedin_manager:
                 profil = api.get_profile(vanityname)
                 break
             except requests.RequestException:
-                print('session')
+                print('get_profile except',Exception)
         print(profil)
 
         return profil

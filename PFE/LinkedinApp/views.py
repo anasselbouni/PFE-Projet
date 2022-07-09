@@ -7,10 +7,11 @@ from linkedin_api import Linkedin
 from bs4 import BeautifulSoup
 import nltk
 import spacy
-from .models import linkedin_account
+from .models import linkedin_account,Linkedin_Profils
 from .scripts.linkd_api import linkedin_manager
 import os
 from PFE.settings import BASE_DIR
+from collections import Counter
 
 ########link###########################
 accounts=linkedin_account.objects.all()
@@ -27,7 +28,7 @@ l_m = linkedin_manager(accounts=accounts_list)
 
 
 
-# essential entity models downloads
+#essential entity models downloads
 nltk.downloader.download('maxent_ne_chunker')
 nltk.downloader.download('words')
 nltk.downloader.download('treebank')
@@ -72,29 +73,58 @@ def compute(request):
     return render(request, 'result.html', context)
 
 @csrf_exempt
-def idsearch(request):
-    username = request.POST.get("username")
-
-    context = {
-    }
-
-    return render(request, 'result.html', context)
-
-
-@csrf_exempt
 def id_search_ajax(request):
     if request.method == 'POST':
         id=request.POST.get('l_u_i')
         prfl=l_m.profile_lookup(id)
-        return JsonResponse(prfl,safe=False)
+        dataa={}
+        l=[f.name for f in Linkedin_Profils._meta.get_fields()]
+        for key,value in prfl.items():
+            if key in l:
+                dataa[key]=value
+            else:
+                pass
+
+
+
+        obj,created=Linkedin_Profils.objects.get_or_create(**dataa)
+        data={}
+        data=obj.__dict__
+        del data['_state']
+        print(data)
+        return JsonResponse(data,safe=False)
     else :
         return HttpResponse(content='method not allowed ',status=400)
+
+@csrf_exempt
+def idsearch(request):
+
+    context = {
+    }
+    if request.method == "POST":
+        username = request.POST.get("username")
+
+
+
+    return render(request, 'result.html', context)
+
+
+
+
+def sector_list(request):
+    sectors=[]
+    [sectors.append(pr.sector) for pr in Linkedin_Profils.objects.all() if pr.sector not in sectors]
+    if len(sectors)> 0:
+        return JsonResponse(sectors, safe=False)
+    else:
+        return HttpResponse(content='no  sectors in the db search using ddg keyword',status=200)
+
 
 @csrf_exempt
 def mass_search(request):
     if request.method == 'POST':
         sector=request.POST.get('sector')
-        try :
+        try:
             os.system(f'python3 {BASE_DIR}/scripts/main.py {sector}')
         except Exception:
             print(Exception)

@@ -1,5 +1,5 @@
 {% extends "layouts/base.html" %}
-{% block title %} Accueil {% endblock %}
+{% block title %} chercher {% endblock %}
 <!-- Content Wrapper. Contains page content -->
 {% block content %}
 
@@ -8,10 +8,13 @@
     <section class="content-header">
       <div id="ajax" class="container-fluid">
         <h2 class="text-center display-4">Enhanced Search</h2>
+
+
       </div>
 
+
         <div class="tab">
-          <button class="tablinks" onclick="openCity(event, 'London')">London</button>
+          <button class="tablinks london " onclick="openCity(event, 'London')">London</button>
           <button class="tablinks" onclick="openCity(event, 'Tokyo')">Tokyo</button>
         </div>
 
@@ -31,6 +34,7 @@
           document.getElementById(cityName).style.display = "block";
           evt.currentTarget.className += " active";
         }
+
         </script>
     </section>
 
@@ -63,45 +67,48 @@
                     </form>
                     <div class="col-md-10 offset-md-1">
                         <div class="list-group">
-                            <div class="list-group-item">
-                                <div class="row">
-                                    <div class="col px-4">
-                                        <div>
-                                            <div class="float-right">2021-04-20 04:04pm</div>
-                                            <h3>Lorem ipsum dolor sit amet</h3>
-                                            <p class="mb-0">consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-group-item">
-                                <div class="row">
-                                    <div class="col-auto">
-                                        <img class="img-fluid" src="../../dist/img/photo1.png" alt="Photo" style="max-height: 160px;">
-                                    </div>
-                                    <div class="col px-4">
-                                        <div>
-                                            <div class="float-right">2021-04-20 10:14pm</div>
-                                            <h3>Lorem ipsum dolor sit amet</h3>
-                                            <p class="mb-0">consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-group-item">
-                                <div class="row">
-                                    <div class="col-auto">
-                                        <iframe width="240" height="160" src="https://www.youtube.com/embed/WEkSYw3o5is?controls=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="border-0" allowfullscreen=""></iframe>
-                                    </div>
-                                    <div class="col px-4">
-                                        <div>
-                                            <div class="float-right">2021-04-20 11:54pm</div>
-                                            <h3>Lorem ipsum dolor sit amet</h3>
-                                            <p class="mb-0">consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
+
+
+<!--                            <div class="list-group-item">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col px-4">-->
+<!--                                        <div>-->
+<!--                                            <div class="float-right">2021-04-20 04:04pm</div>-->
+<!--                                            <h3>Lorem ipsum dolor sit amet</h3>-->
+<!--                                            <p class="mb-0">consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="list-group-item">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-auto">-->
+<!--                                        <img class="img-fluid" src="../../dist/img/photo1.png" alt="Photo" style="max-height: 160px;">-->
+<!--                                    </div>-->
+<!--                                    <div class="col px-4">-->
+<!--                                        <div>-->
+<!--                                            <div class="float-right">2021-04-20 10:14pm</div>-->
+<!--                                            <h3>Lorem ipsum dolor sit amet</h3>-->
+<!--                                            <p class="mb-0">consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="list-group-item">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-auto">-->
+<!--                                        <iframe width="240" height="160" src="https://www.youtube.com/embed/WEkSYw3o5is?controls=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="border-0" allowfullscreen=""></iframe>-->
+<!--                                    </div>-->
+<!--                                    <div class="col px-4">-->
+<!--                                        <div>-->
+<!--                                            <div class="float-right">2021-04-20 11:54pm</div>-->
+<!--                                            <h3>Lorem ipsum dolor sit amet</h3>-->
+<!--                                            <p class="mb-0">consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -361,7 +368,7 @@
             .then(result => {
                   const resultElement = document.querySelector("#ajax");
                   console.log(result);
-                  document.getElementById("ajax").innerHTML += result
+                  document.getElementById("ajax").innerHTML == result
             })
     })
 
@@ -375,7 +382,7 @@
         }
         formData.append('username', username);
         let csrfTokenValue = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const request = new Request('{% url "idsearch" %}', {
+        const request = new Request('{% url "id_search_ajax" %}', {
             method: 'POST',
             body: formData,
             headers: {'X-CSRFToken' : csrfTokenValue}
@@ -384,10 +391,39 @@
             .then(response => response.text())
             .then(result => {
                   const resultElement = document.querySelector("#ajax");
-                  console.log(result);
-                  document.getElementById("ajax").innerHTML += result
+                    var gld= document.getElementsByClassName('list-group');
+                    console.log(gld)
+                    gld[0].innerHTML=''
+
+                  for (const [key, value] of Object.entries(result)) {
+
+                  var r=`
+                             <div class="list-group-item">
+                                <div class="row">
+                                    <div class="col px-4">
+                                        <div>
+                                            <h3>${key}</h3>
+                                            <p class="mb-0">${value}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                  `
+            gld[0].innerHTML += r
+                    }
+
+
+
+
+
+                  document.getElementById("ajax") == r
             })
     })
   </script>
+<script>
+    var l=document.getElementsByClassName('london')
+    l[0].click()
+</script>
 {% endblock content %}
 <!-- /.content-wrapper -->
+
