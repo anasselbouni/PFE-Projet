@@ -75,7 +75,7 @@ def compute(request):
 @csrf_exempt
 def id_search_ajax(request):
     if request.method == 'POST':
-        id=request.POST.get('l_u_i')
+        id=request.POST.get('username')
         prfl=l_m.profile_lookup(id)
         dataa={}
         l=[f.name for f in Linkedin_Profils._meta.get_fields()]
@@ -86,12 +86,10 @@ def id_search_ajax(request):
                 pass
 
 
-
+        print('data:',dataa)
         obj,created=Linkedin_Profils.objects.get_or_create(**dataa)
-        data={}
         data=obj.__dict__
         del data['_state']
-        print(data)
         return JsonResponse(data,safe=False)
     else :
         return HttpResponse(content='method not allowed ',status=400)

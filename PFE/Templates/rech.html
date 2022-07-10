@@ -394,8 +394,14 @@
                     var gld= document.getElementsByClassName('list-group');
                     console.log(gld)
                     gld[0].innerHTML=''
+                    var obj = JSON.parse(result);
 
-                  for (const [key, value] of Object.entries(result)) {
+
+console.log(obj)
+for (let k in obj) {
+        var key=k
+        var value=result[k]
+
 
                   var r=`
                              <div class="list-group-item">
@@ -410,13 +416,13 @@
                             </div>
                   `
             gld[0].innerHTML += r
+            console.log(key,value)
                     }
 
 
 
 
 
-                  document.getElementById("ajax") == r
             })
     })
   </script>
