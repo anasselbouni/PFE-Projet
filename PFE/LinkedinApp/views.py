@@ -100,9 +100,6 @@ def idsearch(request):
     context = {
     }
 
-
-
-
     return render(request, 'result.html', context)
 
 
