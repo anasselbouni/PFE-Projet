@@ -122,6 +122,7 @@ def sector_list(request):
 def mass_search(request):
     if request.method == 'POST':
         sector=request.POST.get('sector')
+        keyword=request.POST.get('keyword')
         try:
             os.system(f'python3 {BASE_DIR}/scripts/main.py {sector}')
         except Exception:
