@@ -85,7 +85,6 @@ def id_search_ajax(request):
             else:
                 pass
 
-
         dataa['vanityname']=prfl['firstName']+'|'+prfl['lastName']
         print('data:',dataa)
         obj,created=Linkedin_Profils.objects.get_or_create(**dataa)
