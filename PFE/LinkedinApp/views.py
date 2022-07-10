@@ -87,7 +87,11 @@ def id_search_ajax(request):
 
         dataa['vanityname']=prfl['firstName']+'|'+prfl['lastName']
         print('data:',dataa)
-        obj,created=Linkedin_Profils.objects.get_or_create(**dataa)
+        obj= Linkedin_Profils.objects.filter(vanityname=dataa['vanityname'])
+        if obj.count() < 1:
+            obj,created=Linkedin_Profils.objects.get_or_create(**dataa)
+        else:
+            obj =obj[0]
         data=obj.__dict__
         del data['_state']
         return JsonResponse(data,safe=False)
