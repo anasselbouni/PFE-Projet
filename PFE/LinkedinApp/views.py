@@ -86,10 +86,13 @@ def id_search_ajax(request):
                 pass
 
 
+        dataa['vanityname']=prfl['firstName']+'|'+prfl['lastName']
         print('data:',dataa)
         obj,created=Linkedin_Profils.objects.get_or_create(**dataa)
         data=obj.__dict__
         del data['_state']
+
+
         return JsonResponse(data,safe=False)
     else :
         return HttpResponse(content='method not allowed ',status=400)
@@ -99,8 +102,7 @@ def idsearch(request):
 
     context = {
     }
-    if request.method == "POST":
-        username = request.POST.get("username")
+
 
 
 
