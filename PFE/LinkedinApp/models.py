@@ -15,9 +15,6 @@ class Linkedin_Profils(models.Model):
 
 
 class linkedin_account(models.Model):
-
-
-class linkedin_account(models.Model):
     email=models.EmailField(default='exemple@exemple.com')
     password=models.CharField(max_length=500,default='password')
 
