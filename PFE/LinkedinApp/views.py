@@ -18,11 +18,14 @@ accounts=linkedin_account.objects.all()
 accounts_list=[]
 for account in accounts:
     ac_dict={}
-    ac_dict['username']=account.email
-    ac_dict['password']=account.password
+    ac_dict['username']= account.email
+    ac_dict['password']= account.password
     print(ac_dict)
     accounts_list.append(ac_dict)
-l_m = linkedin_manager(accounts=accounts_list)
+
+
+
+# l_m = linkedin_manager(accounts=accounts_list)
 #############################################
 
 
@@ -77,6 +80,7 @@ def id_search_ajax(request):
     if request.method == 'POST':
         id=request.POST.get('username')
         prfl=l_m.profile_lookup(id)
+        print(prfl)
         dataa={}
         l=[f.name for f in Linkedin_Profils._meta.get_fields()]
         for key,value in prfl.items():
@@ -93,6 +97,7 @@ def id_search_ajax(request):
         else:
             obj =obj[0]
         data=obj.__dict__
+        print(data)
         del data['_state']
         return JsonResponse(data,safe=False)
     else :

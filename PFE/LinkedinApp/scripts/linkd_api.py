@@ -23,7 +23,6 @@ class linkedin_manager:
                 li_pa=str(account['password'])
                 print(li_pa)
                 if self.proxy != None:
-
                     api = Linkedin(li_us,li_pa,proxies=self.proxy)
                 else:
                     api = Linkedin(li_us,li_pa)
