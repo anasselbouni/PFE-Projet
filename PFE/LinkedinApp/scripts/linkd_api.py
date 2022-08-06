@@ -33,7 +33,6 @@ class linkedin_manager:
                 break
             except requests.RequestException:
                 print('get_profile except',Exception)
-        print(profil)
 
         return profil
 
@@ -45,7 +44,6 @@ class linkedin_manager:
         education = pd.DataFrame()
         profiles = pd.DataFrame()
         for vanityname in self.pl:
-            print(vanityname)
             try:
 
                 profil = self.profile_lookup(vanityname)
@@ -60,7 +58,6 @@ class linkedin_manager:
                             location = profil['geoCountryName']
                         except:
                             location = ''
-                print(profil['firstName'] + ' ' + profil['lastName'])
                 profiles = profiles.append(
                     {
                         'id': vanityname,
@@ -71,6 +68,7 @@ class linkedin_manager:
                         'Lien Linkedin': ' https://www.linkedin.com/in/{}'.format(vanityname)
                     }, ignore_index=True
                 )
+                print(profiles)
 
                 for i in profil['experience']:
                     try:

@@ -42,24 +42,21 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div id="London" class="tabcontent">
+                <div id="London" class="col-md-12 tabcontent">
                     <form method="post">
                         {% csrf_token %}
-                        <div class="row">
+                        <div class="row" style="align-items:center">
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <div class="input-group input-group-lg">
-                                        <label>Nom d'utilisateur :</label>
-                                        <input id="username" class="form-control form-control-lg" style="width:90%;" >
+                                        <input id="username" placeholder="Nom d'utilisateur :"   class="form-control form-control-lg" style="width:90%;" >
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-5 offset-md-1">
                                 <div class="form-group">
-                                    <div class="input-group input-group-lg">
-                                        <div class="input-group-append">
-                                            <input id="id_search" type="submit" class="btn btn-lg btn-default">
-                                        </div>
+                                    <div class="input-group input-group-lg" style="flex-direction: column;">
+                                        <input id="id_search" type="submit" class="btn btn-lg btn-default">
                                     </div>
                                 </div>
                             </div>
@@ -68,47 +65,6 @@
                     <div class="col-md-10 offset-md-1">
                         <div class="list-group">
 
-
-
-<!--                            <div class="list-group-item">-->
-<!--                                <div class="row">-->
-<!--                                    <div class="col px-4">-->
-<!--                                        <div>-->
-<!--                                            <div class="float-right">2021-04-20 04:04pm</div>-->
-<!--                                            <h3>Lorem ipsum dolor sit amet</h3>-->
-<!--                                            <p class="mb-0">consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="list-group-item">-->
-<!--                                <div class="row">-->
-<!--                                    <div class="col-auto">-->
-<!--                                        <img class="img-fluid" src="../../dist/img/photo1.png" alt="Photo" style="max-height: 160px;">-->
-<!--                                    </div>-->
-<!--                                    <div class="col px-4">-->
-<!--                                        <div>-->
-<!--                                            <div class="float-right">2021-04-20 10:14pm</div>-->
-<!--                                            <h3>Lorem ipsum dolor sit amet</h3>-->
-<!--                                            <p class="mb-0">consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="list-group-item">-->
-<!--                                <div class="row">-->
-<!--                                    <div class="col-auto">-->
-<!--                                        <iframe width="240" height="160" src="https://www.youtube.com/embed/WEkSYw3o5is?controls=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="border-0" allowfullscreen=""></iframe>-->
-<!--                                    </div>-->
-<!--                                    <div class="col px-4">-->
-<!--                                        <div>-->
-<!--                                            <div class="float-right">2021-04-20 11:54pm</div>-->
-<!--                                            <h3>Lorem ipsum dolor sit amet</h3>-->
-<!--                                            <p class="mb-0">consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -337,19 +293,18 @@
 
 
                   var r=`
-                             <div class="list-group-item">
-                                <div class="row">
-                                    <div class="col px-4">
-                                        <div>
-                                            <h3>${key}</h3>
-                                            <p class="mb-0">${value}</p>
-                                        </div>
-                                    </div>
+                     <div class="list-group-item">
+                        <div class="row">
+                            <div class="col px-4">
+                                <div>
+                                    <h3>${key}</h3>
+                                    <p class="mb-0">${value}</p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
                   `
             gld[1].innerHTML += r
-            console.log(key,value)
                     }
                     }
             })
@@ -375,32 +330,53 @@
             .then(result => {
                   const resultElement = document.querySelector("#ajax");
                     var gld= document.getElementsByClassName('list-group');
-                    console.log(gld)
                     gld[0].innerHTML=''
                     var obj = JSON.parse(result);
 
 
-console.log(obj)
-for (let k in obj) {
-        var key=k
-        var value =obj[k]
+            console.log(obj["vanityname"])
+              var r=`
+                    <div class="container mt-5">
 
-
-                  var r=`
-                             <div class="list-group-item">
-                                <div class="row">
-                                    <div class="col px-4">
-                                        <div>
-                                            <h3>${key}</h3>
-                                            <p class="mb-0">${value}</p>
+                        <div class="row d-flex justify-content-center">
+                            <div>
+                                <div class="card p-3 py-4">
+                                    <div class="text-center">
+                                        <img src="https://i.imgur.com/bDLhJiP.jpg" width="100" class="rounded-circle">
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <span class="bg-secondary p-1 px-4 rounded text-white">Pro</span>
+                                        <h5 class="mt-2 mb-0">${obj["Nom"]}</h5>
+                                        <span>${obj["headline"]}</span>
+                                        <div class="px-4 mt-1">
+                                            <p class="fonts">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                                        </div>
+                                        <div class="row" style="align-items:center">
+                                            <div class="col-md-5">
+                                                <ul>
+                                                    <li>test</li>
+                                                    <li>sq</li>
+                                                    <li>eta</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-5 offset-md-1">
+                                                <ul>
+                                                    <li>test</li>
+                                                    <li>sq</li>
+                                                    <li>eta</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="buttons">
+                                            <button class="btn btn-outline-primary px-4" ><a style="text-decoration: none" href="${obj["Lien_Linkedin"]}">Plus détails</a></button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
                   `
             gld[0].innerHTML += r
-            console.log(key,value)
-                    }
 
 
 

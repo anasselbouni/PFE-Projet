@@ -20,12 +20,11 @@ for account in accounts:
     ac_dict={}
     ac_dict['username']= account.email
     ac_dict['password']= account.password
-    print(ac_dict)
     accounts_list.append(ac_dict)
 
 
 
-# l_m = linkedin_manager(accounts=accounts_list)
+l_m = linkedin_manager(accounts=accounts_list)
 #############################################
 
 
@@ -45,7 +44,6 @@ nltk.download('averaged_perceptron_tagger')
 
 
 def index(request):
-
     profiles = pd.read_excel(f'{BASE_DIR}/LinkedinApp/data.xlsx',index_col=0, sheet_name="profiles")
     experience = pd.read_excel(f'{BASE_DIR}/LinkedinApp/data.xlsx',index_col=0, sheet_name="experience")
     education = pd.read_excel(f'{BASE_DIR}/LinkedinApp/data.xlsx',index_col=0, sheet_name="education")
@@ -80,7 +78,6 @@ def id_search_ajax(request):
     if request.method == 'POST':
         id=request.POST.get('username')
         prfl=l_m.profile_lookup(id)
-        print(prfl)
         dataa={}
         l=[f.name for f in Linkedin_Profils._meta.get_fields()]
         for key,value in prfl.items():
@@ -89,15 +86,25 @@ def id_search_ajax(request):
             else:
                 pass
 
-        dataa['vanityname']=prfl['firstName']+'|'+prfl['lastName']
-        print('data:',dataa)
+        dataa['vanityname']= id
+        dataa['Nom']= prfl['firstName'] + ' ' + prfl['lastName']
+        dataa['Lien_Linkedin'] = 'https://www.linkedin.com/in/{}'.format(dataa['vanityname'])
+        try:
+            dataa['location'] = prfl['geoLocationName'] + ' ' + prfl['geoCountryName'],
+        except:
+            try:
+                dataa['location'] = prfl['geoLocationName'],
+            except:
+                try:
+                    dataa['location'] = prfl['geoCountryName']
+                except:
+                    dataa['location'] = ''
         obj= Linkedin_Profils.objects.filter(vanityname=dataa['vanityname'])
         if obj.count() < 1:
             obj,created=Linkedin_Profils.objects.get_or_create(**dataa)
         else:
             obj =obj[0]
         data=obj.__dict__
-        print(data)
         del data['_state']
         return JsonResponse(data,safe=False)
     else :

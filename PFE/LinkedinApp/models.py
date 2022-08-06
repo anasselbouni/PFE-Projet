@@ -8,10 +8,8 @@ class Linkedin_Profils(models.Model):
     location = models.CharField(max_length=200, blank=True, default='NaN')
     Lien_Linkedin = models.CharField(max_length=200, blank=True, default='NaN')
     industryName=models.CharField(max_length=200, blank=True, default='NaN')
-    certifications=models.CharField(max_length=200, blank=True, default='NaN')
+    experience=models.CharField(max_length=200, blank=True, default='NaN')
     education=models.CharField(max_length=200, blank=True, default='NaN')
-    geoLocationName=models.CharField(max_length=200, blank=True, default='NaN')
-    geoCountryName=models.CharField(max_length=200, blank=True, default='NaN')
 
 
 class linkedin_account(models.Model):
