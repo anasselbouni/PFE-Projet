@@ -12,4 +12,3 @@ def find_between_r( s, first, last ):
         return ""
 
 
-

@@ -9,6 +9,8 @@ class Linkedin_Profils(models.Model):
     Lien_Linkedin = models.CharField(max_length=200, blank=True, default='NaN')
     industryName=models.CharField(max_length=200, blank=True, default='NaN')
     experience=models.CharField(max_length=200, blank=True, default='NaN')
+    summary=models.CharField(max_length=200, blank=True, default='NaN')
+    skills=models.CharField(max_length=200, blank=True, default='NaN')
     education=models.CharField(max_length=200, blank=True, default='NaN')
 
 

@@ -3,14 +3,15 @@ import pymongo
 import pprint
 
 class mongo_manager:
-    def __init__(self,db_name):
+    def __init__(self):
         self.connect= self.get_client('localhost',27017)
-        self.dbname = self.connect[db_name]
-
+        self.dbname = self.connect["mongo"]
+        self.collection = self.dbname["LinkedinApp_linkedin_profils"]
     def get_client(self,host, port):
         client = pymongo.MongoClient(host=host,
                                      port=int(port),
                                      )
+
         return client
 
     def kwargs_to_doc(self,**kwargs):
@@ -36,9 +37,14 @@ class mongo_manager:
 
         return r
 
-    def insert(self,collection,data):
-        collection_name=collection
+    def insert(self,data):
+        collection_name=self.collection
         collection_name.insert(data)
+        return True
+
+    def update(self,query,data):
+        collection_name=self.collection
+        collection_name.update(query, data)
         return True
 
     def insert_many(self,collection,data):

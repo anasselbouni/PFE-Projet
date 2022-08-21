@@ -2,20 +2,110 @@
 {% block title %} chercher {% endblock %}
 <!-- Content Wrapper. Contains page content -->
 {% block content %}
+<style>
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  background: linear-gradient(0deg, rgba(255, 61, 0, 0.2) 33%, #ff3d00 100%);
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+.loader::after {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #f4f6f9;
+}
+@keyframes rotation {
+  0% { transform: rotate(0deg) }
+  100% { transform: rotate(360deg)}
+}
 
+
+
+
+.info-msg,
+.success-msg,
+.warning-msg,
+.error-msg {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 3px 3px 3px 3px;
+}
+.info-msg {
+  color: #059;
+  background-color: #BEF;
+}
+.success-msg {
+  color: #270;
+  background-color: #DFF2BF;
+}
+.warning-msg {
+  color: #9F6000;
+  background-color: #FEEFB3;
+}
+.error-msg {
+  color: #D8000C;
+  background-color: #FFBABA;
+}
+
+
+.button-13 {
+  background-color: #fff;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  box-sizing: border-box;
+  color: #0f1111;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Amazon Ember",sans-serif;
+  font-size: 13px;
+  line-height: 29px;
+  padding: 0 10px 0 11px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  width: 100px;
+}
+
+.button-13:hover {
+  background-color: #f7fafa;
+}
+
+.button-13:focus {
+  border-color: #008296;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  outline: 0;
+}
+
+</style>
 <div class="content-wrapper" style="min-height: 1388.5px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <div id="ajax" class="container-fluid">
-        <h2 class="text-center display-4">Enhanced Search</h2>
+        <h2 class="text-center display-4">Outil de scrapping</h2>
 
 
       </div>
 
 
         <div class="tab">
-          <button class="tablinks london " onclick="openCity(event, 'London')">Chercher par id</button>
-          <button class="tablinks" onclick="openCity(event, 'Tokyo')">chercher par secteur</button>
+          <button class="tablinks london " onclick="openCity(event, 'London')">Recherche simple</button>
+          <button class="tablinks" onclick="openCity(event, 'Tokyo')">recherche de masse</button>
         </div>
 
 
@@ -49,14 +139,14 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <div class="input-group input-group-lg">
-                                        <input id="username" placeholder="Nom d'utilisateur :"   class="form-control form-control-lg" style="width:90%;" >
+                                        <input id="username" style="border-radius: 4vw;width:90%;" placeholder="Line de profile"   class="form-control form-control-lg" >
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-5 offset-md-1">
                                 <div class="form-group">
                                     <div class="input-group input-group-lg" style="flex-direction: column;">
-                                        <input id="id_search" type="submit" class="btn btn-lg btn-default">
+                                        <input id="id_search" type="submit" class="button-13"><span id="single-search" style="display:None;" class="loader"></span>
                                     </div>
                                 </div>
                             </div>
@@ -69,15 +159,14 @@
                     </div>
                 </div>
 
-                <div id="Tokyo" class="tabcontent">
+                <div id="Tokyo" style="width: 100%;" class="tabcontent">
                     <form method="post">
                         {% csrf_token %}
-                        <div class="row">
-                            <div class="col-md-6">
+                        <div class="row" style="align-items: center;">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <div class="input-group input-group-lg">
-                                        <label>Secteur :</label>
-                                        <input class="form-control form-control-lg"  type="text" name="Cat_services" id="Cat_services" list="Cat_services_list">
+                                        <input placeholder="Secteur"  style="border-radius: 4vw;" class="form-control form-control-lg"  type="text" name="Cat_services" id="Cat_services" list="Cat_services_list">
                                         <datalist id="Cat_services_list">
                                             <option value="Administration publique ">
                                             <option value="Administration scolaire et universitaire ">
@@ -230,24 +319,29 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <div class="input-group input-group-lg">
-                                        <label>Mot cle :</label>
-                                        <input id="keyword" class="form-control form-control-lg" >
+                                        <input style="border-radius: 4vw;" id="keyword" placeholder="mot-clé" class="form-control form-control-lg" >
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-5 offset-md-1">
+                            <div class="col-md-3 offset-md-1">
                                 <div class="form-group">
                                     <div class="input-group input-group-lg">
                                         <div class="input-group-append">
-                                            <input id="ajax-call" type="submit" class="btn btn-lg btn-default">
+                                            <input id="ajax-call" type="submit" class="button-13"><span id="mass-search" style="display:None;" class="loader"></span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-5 offset-md-1">
+                                <div id="result"></div><br>
+                            </div>
+                        </div>
+
                     </form>
                 </div>
 
@@ -278,35 +372,44 @@
             body: formData,
             headers: {'X-CSRFToken' : csrfTokenValue}
         });
+        document.getElementById('ajax-call').style.display='None';
+        document.getElementById('mass-search').style.display='Block';
         fetch(request)
             .then(response => response.text())
             .then(result => {
-                  const resultElement = document.querySelector("#ajax");
-                  var gld= document.getElementsByClassName('list-group');
-                    gld[1].innerHTML=''
+                    const container = document.getElementById('result');
+                    var gld= document.getElementById('result');
                     var robj = JSON.parse(result);
-
-                    for (let rr in robj) {
-                    for (let k in rr) {
-        var key=k
-        var value =rr[k]
-
-
-                  var r=`
-                     <div class="list-group-item">
-                        <div class="row">
-                            <div class="col px-4">
-                                <div>
-                                    <h3>${key}</h3>
-                                    <p class="mb-0">${value}</p>
-                                </div>
-                            </div>
+                    if (result['nb_found'] >= 1) {
+                        var r=`
+                        <div class="success-msg">
+                          <i class="fa fa-check"></i>
+                          Analyse completé. ${robj['nb_found']} trouvé(s), ${robj['nb_add']} ajouté(s) au base de donné.
                         </div>
-                    </div>
-                  `
-            gld[1].innerHTML += r
+                        `
+                    } else {
+                        if (result['success'] == 'done') {
+                            var r=`
+                            <div class="warning-msg">
+                              <i class="fa fa-warning"></i>
+                              Erreur au cours d'analyse. ${robj['nb_found']} trouvé(s), ${robj['nb_add']} ajouté(s) au base de donné.
+                            </div>
+                            `
+                        } else {
+
+                            var r=`
+                            <div class="warning-msg">
+                              <i class="fa fa-warning"></i>
+                              Déjà ajoutée(s) ! ${robj['nb_found']} trouvé(s), ${robj['nb_add']} ajouté(s) au base de donné.
+                            </div>
+                            `
+                        }
+
                     }
-                    }
+                    gld.innerHTML += r
+                    console.log(result);
+                    document.getElementById('ajax-call').style.display='Block';
+                    document.getElementById('mass-search').style.display='None';
             })
     })
 
@@ -320,6 +423,8 @@
         }
         formData.append('username', username);
         let csrfTokenValue = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        document.getElementById('id_search').style.display='None';
+        document.getElementById('single-search').style.display='Block';
         const request = new Request('{% url "id_search_ajax" %}', {
             method: 'POST',
             body: formData,
@@ -330,55 +435,11 @@
             .then(result => {
                   const resultElement = document.querySelector("#ajax");
                     var gld= document.getElementsByClassName('list-group');
-                    gld[0].innerHTML=''
-                    var obj = JSON.parse(result);
+                    gld[0].innerHTML=result
 
 
-            console.log(obj["vanityname"])
-              var r=`
-                    <div class="container mt-5">
-
-                        <div class="row d-flex justify-content-center">
-                            <div>
-                                <div class="card p-3 py-4">
-                                    <div class="text-center">
-                                        <img src="https://i.imgur.com/bDLhJiP.jpg" width="100" class="rounded-circle">
-                                    </div>
-                                    <div class="text-center mt-3">
-                                        <span class="bg-secondary p-1 px-4 rounded text-white">Pro</span>
-                                        <h5 class="mt-2 mb-0">${obj["Nom"]}</h5>
-                                        <span>${obj["headline"]}</span>
-                                        <div class="px-4 mt-1">
-                                            <p class="fonts">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
-                                        </div>
-                                        <div class="row" style="align-items:center">
-                                            <div class="col-md-5">
-                                                <ul>
-                                                    <li>test</li>
-                                                    <li>sq</li>
-                                                    <li>eta</li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-md-5 offset-md-1">
-                                                <ul>
-                                                    <li>test</li>
-                                                    <li>sq</li>
-                                                    <li>eta</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="buttons">
-                                            <button class="btn btn-outline-primary px-4" ><a style="text-decoration: none" href="${obj["Lien_Linkedin"]}">Plus détails</a></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                  `
-            gld[0].innerHTML += r
-
-
+                    document.getElementById('id_search').style.display='Block';
+                    document.getElementById('single-search').style.display='None';
 
 
 

@@ -4,6 +4,8 @@ import pandas as pd
 import random
 from time import sleep
 from .proxy_list import get_proxies
+from LinkedinApp.models import Linkedin_Profils
+
 
 class linkedin_manager:
     def __init__(self,accounts=None,industr=None,pl=None,prx=None):
@@ -15,26 +17,161 @@ class linkedin_manager:
     def profile_lookup(self,vanityname):
 
         profil={'has not been lookup':vanityname}
+        print(profil)
         for account in self.accounts:
             print(account)
+
+            experience = []
+            skills = []
+            education = []
             try:
                 li_us=str(account['username'])
                 print(li_us)
                 li_pa=str(account['password'])
-                print(li_pa)
                 if self.proxy != None:
                     api = Linkedin(li_us,li_pa,proxies=self.proxy)
                 else:
                     api = Linkedin(li_us,li_pa)
 
+                prfl = api.get_profile(vanityname)
+                #
 
+                dataa = {}
+                l = [f.name for f in Linkedin_Profils._meta.get_fields()]
+                for key, value in prfl.items():
+                    if key in l:
+                        dataa[key] = value
+                    else:
+                        pass
 
-                profil = api.get_profile(vanityname)
+                try:
+                    dataa['location'] = prfl['geoLocationName'] + ' ' + prfl['geoCountryName'],
+                except:
+                    try:
+                        dataa['location'] = prfl['geoLocationName'],
+                    except:
+                        try:
+                            dataa['location'] = prfl['geoCountryName']
+                        except:
+                            dataa['location'] = ''
+
+                dataa['vanityname'] = vanityname
+                try:
+                    dataa['summary'] = prfl['summary']
+                except:
+                    dataa['summary'] = "NONE"
+                try:
+                    dataa['skills'] = prfl['skills']
+                except:
+                    pass
+                try:
+                    dataa['Nom'] = prfl['firstName'] + ' ' + prfl['lastName']
+                except:
+                    dataa['Nom'] = ""
+                try:
+                    dataa['Lien_Linkedin'] = 'https://www.linkedin.com/in/{}'.format(vanityname)
+                except:
+                    dataa['Lien_Linkedin'] = ""
+                ###experience
+                for i in prfl["experience"]:
+                    try:
+                        try:
+                            if None not in (i["timePeriod"]["startDate"]["month"],
+                                            i["timePeriod"]["startDate"]['year']):
+                                timePeriod = ''
+                            if i["timePeriod"]["startDate"]['month'] is None and \
+                                    i["timePeriod"]["startDate"]['year'] is not None:
+                                timePeriod = '{}'.format(i["timePeriod"]["startDate"]['year'])
+                            if i["timePeriod"]["startDate"]['month'] is not None and \
+                                    i["timePeriod"]["startDate"]['year'] is None:
+                                timePeriod = '{}'.format(i["timePeriod"]["startDate"]['month'])
+                            if i["timePeriod"]["startDate"]['month'] is not None and \
+                                    i["timePeriod"]["startDate"]['year'] is not None:
+                                timePeriod = '{}/{}'.format(i["timePeriod"]["startDate"]['month'],
+                                                            i["timePeriod"]["startDate"]['year'])
+                        except:
+                            timePeriod = ''
+
+                        try:
+                            if i["timePeriod"]["endDate"]['month'] is None and \
+                                    i["timePeriod"]["endDate"]['year'] is not None:
+                                timePeriod += ' - {}'.format(i["timePeriod"]["endDate"]['year'])
+                            if i["timePeriod"]["endDate"]['month'] is not None and \
+                                    i["timePeriod"]["endDate"]['year'] is not None:
+                                timePeriod += ' - {}'.format(i["timePeriod"]["endDate"]['month'])
+                            if i["timePeriod"]["endDate"]['month'] is not None and \
+                                    i["timePeriod"]["endDate"]['year'] is not None:
+                                timePeriod += ' - {}/{}'.format(i["timePeriod"]["endDate"]['month'],
+                                                                i["timePeriod"]["endDate"]['year'])
+                        except:
+                            pass
+
+                        experience.append({
+                            'title': i["title"],
+                            'locationName': i["locationName"],
+                            'description': i["description"],
+                            'companyName': i["companyName"],
+                            'timePeriod': timePeriod,
+                        })
+
+                    except:
+                        pass
+                ###skills
+                try:
+                    for t in prfl["skills"]:
+                        skills.append(
+                            {
+                                'name': t["name"],
+                            }
+                        )
+
+                except:
+                    pass
+                ###education
+                for i in prfl['education']:
+                    try:
+                        try:
+                            endate = '{}'.format(i['timePeriod']['endDate']['year'])
+                        except:
+                            endate = ''
+                        try:
+                            degreeName = i['degreeName']
+                        except:
+                            degreeName = ''
+                        try:
+                            fieldOfStudy = i['fieldOfStudy']
+                        except:
+                            fieldOfStudy = ''
+                        try:
+                            startdate = i['timePeriod']['startDate']['year']
+                        except:
+                            startdate = ''
+
+                        education.append(
+                            {
+                                'degreeName': degreeName,
+                                'schoolName': i['schoolName'],
+                                'fieldOfStudy': fieldOfStudy,
+                                'period': '{} - {}'.format(startdate, endate),
+                            })
+                    except:
+                        pass
+                #
+                mydict = {"Nom": dataa["Nom"],
+                          "vanityname": vanityname,
+                          "summary": dataa["summary"],
+                          "Lien_Linkedin": dataa["Lien_Linkedin"],
+                          "industryName": dataa["industryName"],
+                          "headline": dataa["headline"],
+                          "experience": experience,
+                          "education": education,
+                          "skills": skills}
                 break
-            except requests.RequestException:
-                print('get_profile except',Exception)
+            except:
+                mydict = {"vanityname": 0}
+                break
 
-        return profil
+        return mydict,skills,education,experience
 
 
     def profile_compilation(self,return_dict):
@@ -110,7 +247,6 @@ class linkedin_manager:
 
                     experience = experience.append(
                         {
-                            'PersonID': vanityname,
                             'title': i['title'],
                             'locationName': exp,
                             'companyName': companyName,
@@ -121,7 +257,6 @@ class linkedin_manager:
                 for i in profil['skills']:
                     skills = skills.append(
                         {
-                            'PersonID': vanityname,
                             'skill': i['name'],
                         }, ignore_index=True
                     )
@@ -144,7 +279,6 @@ class linkedin_manager:
                         startdate = ''
                     education = education.append(
                         {
-                            'PersonID': vanityname,
                             'degreeName': degreeName,
                             'schoolName': i['schoolName'],
                             'fieldOfStudy': fieldOfStudy,

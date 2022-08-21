@@ -1,0 +1,65 @@
+{% if dataa.vanityname != 0 %}
+<div class="container mt-5">
+    <div class="row d-flex justify-content-center">
+        <div>
+            <div class="card p-3 py-4">
+                <div class="text-center">
+                    <img src="" width="100" class="rounded-circle">
+                </div>
+                <div class="text-center mt-3">
+                    <span class="bg-secondary p-1 px-4 rounded text-white">{{ dataa.Nom }}</span>
+                    <h5 class="mt-2 mb-0">{{ dataa.headline }} - {{ dataa.location }}</h5>
+                    <div class="px-4 mt-1">
+
+                        <div style="background-color: aliceblue;"><h4>Description</h4></div>
+                        <p class="fonts"> {{ dataa.summary }}</p>
+
+                    </div><hr>
+                    <div class="px-4 mt-1">
+                        <div style="background-color: antiquewhite;"><h4>Compétences</h4></div>
+                        <ul style="column-count: 3;text-align: left !important;">
+                            {% for i in skills %}<li style="">{{ i.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div><hr>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div style="background-color: antiquewhite;"><h4>Expérience</h4></div>
+                                {% for i in experience %}
+                            <ul>
+                                <li>{{ i.title }}</li>
+                                <p>{{ i.companyName }} - {{ i.timePeriod }}</p>
+                                <p>{{ i.locationName }}</p>
+                                <p>{{ i.description }}</p>
+                                <p><hr></p>
+
+                            </ul>
+                                {% endfor %}
+                        </div>
+                        <div class="col-md-5 offset-md-1">
+                            <div style="background-color: aliceblue;"><h4>Education</h4></div>
+                                {% for i in education %}
+                            <ul>
+                                <li>{{ i.degreeName }}</li>
+                                <p>{{ i.schoolName }} - {{ i.period }}</p>
+                                <p>{{ i.fieldOfStudy }}</p>
+                                <p><hr></p>
+
+                            </ul>
+                                {% endfor %}
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <button class="btn btn-outline-primary px-4" ><a style="text-decoration: none" href="{{ dataa.Lien_Linkedin }}">Plus détails</a></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="error-msg">
+  <i class="fa fa-times-circle"></i>
+  Aucun profile a trouvé.
+</div>
+{% endif %}
