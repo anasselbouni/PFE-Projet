@@ -98,18 +98,11 @@
     <section class="content-header">
       <div id="ajax" class="container-fluid">
         <h2 class="text-center display-4">Outil de scrapping</h2>
-
-
       </div>
-
-
         <div class="tab">
           <button class="tablinks london " onclick="openCity(event, 'London')">Recherche simple</button>
           <button class="tablinks" onclick="openCity(event, 'Tokyo')">recherche de masse</button>
         </div>
-
-
-
         <script>
         function openCity(evt, cityName) {
           var i, tabcontent, tablinks;
@@ -139,7 +132,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <div class="input-group input-group-lg">
-                                        <input id="username" style="border-radius: 4vw;width:90%;" placeholder="Line de profile"   class="form-control form-control-lg" >
+                                        <input type="text" id="link" style="border-radius: 4vw;width:90%;" placeholder="Line de profile"   class="form-control form-control-lg" >
                                     </div>
                                 </div>
                             </div>
@@ -406,7 +399,7 @@
                         }
 
                     }
-                    gld.innerHTML += r
+                    gld.innerHTML= r
                     console.log(result);
                     document.getElementById('ajax-call').style.display='Block';
                     document.getElementById('mass-search').style.display='None';
@@ -415,7 +408,7 @@
 
     document.querySelector("#id_search").addEventListener("click", event => {
         var inputTextValue;
-        username = document.querySelector('#username').value;
+        username = document.querySelector('#link').value;
         event.preventDefault();
         let formData = new FormData();
         if (username == null) {

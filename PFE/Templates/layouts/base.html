@@ -34,6 +34,7 @@
   <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css'%}">
 
   <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css'%}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
     .tab {
   overflow: hidden;
@@ -73,6 +74,7 @@
   </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed sidebar-collapse">
+{% if user.is_authenticated %}
 <div class="wrapper">
   <div class="preloader flex-column justify-content-center align-items-center">
     <img class="animation__shake" src="{% static 'img/AdminLTELogo.png'%}" alt="AdminLTELogo" height="60" width="60">
@@ -96,7 +98,8 @@
           <img src="{% static 'img/user2-160x160.jpg'%}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block">{{ user.username }}</a>
+          <a href="/logout" class="d-block">Se déconnecter</a>
         </div>
       </div>
 
@@ -104,13 +107,13 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            <a href="/" class="nav-link active">
+            {% if page_name == "index" %}<a href="/" class="nav-link active">{% else %}<a href="/" class="nav-link">{% endif %}
               <i class="far fa-circle nav-icon"></i>
               <p>Accueil</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="/recherche" class="nav-link">
+            {% if page_name == "recherche" %}<a href="/recherche" class="nav-link active">{% else %}<a href="/recherche" class="nav-link">{% endif %}
               <i class="nav-icon fas fa-search"></i>
               <p>
                 Recherche de Profile
@@ -123,9 +126,10 @@
     </div>
   </aside>
 
-
+{% endif %}
 {% block content %}{% endblock content %}
 
+{% if user.is_authenticated %}
 
   <footer class="main-footer">
 
@@ -139,6 +143,8 @@
 </div>
 <!-- ./wrapper -->
 
+
+{% endif %}
 
 <script src="{% static 'plugins/jquery/jquery.min.js'%}"></script>
 <!-- Bootstrap 4 -->
@@ -157,28 +163,29 @@
 <script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js'%}"></script>
 <script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js'%}"></script>
 
+
 <!-- Select2 -->
 <script src="{% static 'plugins/select2/js/select2.full.min.js'%}"></script>
 <!-- AdminLTE App -->
 <script src="{% static 'js/adminlte.min.js'%}"></script>
 <!-- Page specific script -->
-<script>
-  $(function () {
-    $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
+  <script>
+    $(document).ready(function () {
+      $("#example1").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        "buttons": ["csv", "excel"]
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+      $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
     });
-  });
-</script>
+  </script>
 
 <script>
     $(function () {

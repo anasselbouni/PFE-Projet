@@ -8,6 +8,7 @@
                 </div>
                 <div class="text-center mt-3">
                     <span class="bg-secondary p-1 px-4 rounded text-white">{{ dataa.Nom }}</span>
+                    <h5 class="mt-2 mb-0">Expérience : {{ dataa.total_experience.years }} année(s) {{ dataa.total_experience.months }} mois</h5>
                     <h5 class="mt-2 mb-0">{{ dataa.headline }} - {{ dataa.location }}</h5>
                     <div class="px-4 mt-1">
 
@@ -28,9 +29,9 @@
                                 {% for i in experience %}
                             <ul>
                                 <li>{{ i.title }}</li>
-                                <p>{{ i.companyName }} - {{ i.timePeriod }}</p>
+                                <p>{{ i.companyName }} | {{ i.startDate.month }}/{{ i.startDate.year }} <i class="fa fa-arrow-right" aria-hidden="true"></i>{{ i.endDate.month }}/{{ i.endDate.year }}</p>
                                 <p>{{ i.locationName }}</p>
-                                <p>{{ i.description }}</p>
+                                <p>Description : {{ i.description }}</p>
                                 <p><hr></p>
 
                             </ul>
@@ -41,7 +42,7 @@
                                 {% for i in education %}
                             <ul>
                                 <li>{{ i.degreeName }}</li>
-                                <p>{{ i.schoolName }} - {{ i.period }}</p>
+                                <p>{{ i.schoolName }} | {{ i.period }}</p>
                                 <p>{{ i.fieldOfStudy }}</p>
                                 <p><hr></p>
 

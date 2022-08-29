@@ -2,18 +2,62 @@
 {% block title %} Accueil {% endblock %}
 <!-- Content Wrapper. Contains page content -->
 {% block content %}
+<style>
+
+  .modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: fit-content;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+</style>
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div id="result">Some text in the Modal..</div>
+  </div>
+
+</div>
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0">Accueil</h1>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item active"><a href="#">Accueil</a></li>
-          </ol>
+          <h1 class="m-0">Data!</h1>
         </div>
       </div>
     </div>
@@ -24,8 +68,10 @@
   <section class="content">
     <div class="container-fluid">
 
+      <form action="" method="post">
+      {% csrf_token %}
         <div class="row">
-          <div class="col-xl-6 col-md-12">
+          <div class="col-xl-4 col-md-12">
             <label for="id_secteur">Secteur</label>
             <input type="text" list="secteur_list" class="form-control form-pop" name="secteur" id="id_secteur" >
             <datalist id="secteur_list">
@@ -34,19 +80,7 @@
               {% endfor %}
             </datalist>
           </div>
-          <div class="col-xl-6 col-md-12">
-            <label for="id_titre">Titre</label>
-            <input type="text" list="titre_list" class="form-control form-pop" name="titre" id="id_titre" >
-            <datalist id="titre_list">
-
-              {% for i in titres %}
-              <option value="{{ i }}">
-              {% endfor %}
-            </datalist>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xl-6 col-md-12">
+          <div class="col-xl-4 col-md-12">
             <label for="id_ville">Ville</label>
             <input type="text" list="ville_list" class="form-control form-pop" name="ville" id="id_ville" >
             <datalist id="ville_list">
@@ -56,466 +90,78 @@
               {% endfor %}
             </datalist>
           </div>
-          <div class="col-xl-6 col-md-12">
-            <label for="id_degree">Diplome</label>
-            <input type="text" list="degree_list" class="form-control form-pop" name="degree" id="id_degree" >
-            <datalist id="degree_list">
+          <div class="col-xl-4 col-md-12">
+            <label for="id_competence">Compétences</label>
+            <input type="text" list="competence_list" class="form-control form-pop" name="competence" id="id_competence" >
+            <datalist id="competence_list">
 
-              {% for i in diplomes %}
+              {% for i in skills %}
               <option value="{{ i }}">
               {% endfor %}
             </datalist>
           </div>
         </div>
+        <br>
         <div class="row">
           <div class="col-xl-6 col-md-12">
-            <label for="id_competence">Compétences</label>
-            <input type="text" list="competence_list" class="form-control form-pop" name="competence" id="id_competence" >
-            <datalist id="competence_list">
-              <option value="Edge">
-            </datalist>
           </div>
           <div class="col-xl-3 col-md-12">
-            <label for="id_experience">Experience (nombres d'années)</label>
-            <input type="number" class="form-control form-pop" name="experience" id="id_experience" >
+            <h1 id="ajax"></h1>
+          </div>
+          <div class="col-xl-3 col-md-12">
+            <div class="form-group">
+                <div class="input-group input-group-lg" style="flex-direction: column;">
+                    <input id="table_search" type="submit" value="Recherche" class="button-13">
+                </div>
+            </div>
           </div>
         </div>
-      </div>
+      </form>
       <hr>
-      <div class="row">
+      <div id="table" class="row">
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
+              <h3 class="card-title">Résultat</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Rendering engine</th>
-                  <th>Browser</th>
-                  <th>Platform(s)</th>
-                  <th>Engine version</th>
-                  <th>CSS grade</th>
+                  <th>Nom</th>
+                  <th>Titre</th>
+                  <th>Ville</th>
+                  <th>Secteur d'activité</th>
+                  <th>Experience</th>
+                  <th></th>
                 </tr>
                 </thead>
                 <tbody>
+                {% for i in data %}
                 <tr>
-                  <td>Trident</td>
-                  <td>Internet
-                    Explorer 4.0
-                  </td>
-                  <td>Win 95+</td>
-                  <td> 4</td>
-                  <td>X</td>
+                  <td>{{ i.Nom }}</td>
+                  <td>{{ i.headline }}</td>
+                  <td>{{ i.location }}</td>
+                  <td>{{ i.industryName }}</td>
+                  <td>{{ i.total_experience.years }} année(s) {{ i.total_experience.months }} mois</td>
+                  <td>
+                      <button  onclick="javascript:get_profile('{{ i.vanityname }}');" style="background-color: transparent;border: 0;" type="submit">
+                        <i id="" class="fa fa-address-card-o"></i>
+                      </button>
+                    <a target="_blank" href="{{ i.Lien_Linkedin }}"><i class="fa fa-globe"></i></a></td>
+
                 </tr>
-                <tr>
-                  <td>Trident</td>
-                  <td>Internet
-                    Explorer 5.0
-                  </td>
-                  <td>Win 95+</td>
-                  <td>5</td>
-                  <td>C</td>
-                </tr>
-                <tr>
-                  <td>Trident</td>
-                  <td>Internet
-                    Explorer 5.5
-                  </td>
-                  <td>Win 95+</td>
-                  <td>5.5</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Trident</td>
-                  <td>Internet
-                    Explorer 6
-                  </td>
-                  <td>Win 98+</td>
-                  <td>6</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Trident</td>
-                  <td>Internet Explorer 7</td>
-                  <td>Win XP SP2+</td>
-                  <td>7</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Trident</td>
-                  <td>AOL browser (AOL desktop)</td>
-                  <td>Win XP</td>
-                  <td>6</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Firefox 1.0</td>
-                  <td>Win 98+ / OSX.2+</td>
-                  <td>1.7</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Firefox 1.5</td>
-                  <td>Win 98+ / OSX.2+</td>
-                  <td>1.8</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Firefox 2.0</td>
-                  <td>Win 98+ / OSX.2+</td>
-                  <td>1.8</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Firefox 3.0</td>
-                  <td>Win 2k+ / OSX.3+</td>
-                  <td>1.9</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Camino 1.0</td>
-                  <td>OSX.2+</td>
-                  <td>1.8</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Camino 1.5</td>
-                  <td>OSX.3+</td>
-                  <td>1.8</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Netscape 7.2</td>
-                  <td>Win 95+ / Mac OS 8.6-9.2</td>
-                  <td>1.7</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Netscape Browser 8</td>
-                  <td>Win 98SE+</td>
-                  <td>1.7</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Netscape Navigator 9</td>
-                  <td>Win 98+ / OSX.2+</td>
-                  <td>1.8</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Mozilla 1.0</td>
-                  <td>Win 95+ / OSX.1+</td>
-                  <td>1</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Mozilla 1.1</td>
-                  <td>Win 95+ / OSX.1+</td>
-                  <td>1.1</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Mozilla 1.2</td>
-                  <td>Win 95+ / OSX.1+</td>
-                  <td>1.2</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Mozilla 1.3</td>
-                  <td>Win 95+ / OSX.1+</td>
-                  <td>1.3</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Mozilla 1.4</td>
-                  <td>Win 95+ / OSX.1+</td>
-                  <td>1.4</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Mozilla 1.5</td>
-                  <td>Win 95+ / OSX.1+</td>
-                  <td>1.5</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Mozilla 1.6</td>
-                  <td>Win 95+ / OSX.1+</td>
-                  <td>1.6</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Mozilla 1.7</td>
-                  <td>Win 98+ / OSX.1+</td>
-                  <td>1.7</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Mozilla 1.8</td>
-                  <td>Win 98+ / OSX.1+</td>
-                  <td>1.8</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Seamonkey 1.1</td>
-                  <td>Win 98+ / OSX.2+</td>
-                  <td>1.8</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Gecko</td>
-                  <td>Epiphany 2.20</td>
-                  <td>Gnome</td>
-                  <td>1.8</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Webkit</td>
-                  <td>Safari 1.2</td>
-                  <td>OSX.3</td>
-                  <td>125.5</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Webkit</td>
-                  <td>Safari 1.3</td>
-                  <td>OSX.3</td>
-                  <td>312.8</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Webkit</td>
-                  <td>Safari 2.0</td>
-                  <td>OSX.4+</td>
-                  <td>419.3</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Webkit</td>
-                  <td>Safari 3.0</td>
-                  <td>OSX.4+</td>
-                  <td>522.1</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Webkit</td>
-                  <td>OmniWeb 5.5</td>
-                  <td>OSX.4+</td>
-                  <td>420</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Webkit</td>
-                  <td>iPod Touch / iPhone</td>
-                  <td>iPod</td>
-                  <td>420.1</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Webkit</td>
-                  <td>S60</td>
-                  <td>S60</td>
-                  <td>413</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Presto</td>
-                  <td>Opera 7.0</td>
-                  <td>Win 95+ / OSX.1+</td>
-                  <td>-</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Presto</td>
-                  <td>Opera 7.5</td>
-                  <td>Win 95+ / OSX.2+</td>
-                  <td>-</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Presto</td>
-                  <td>Opera 8.0</td>
-                  <td>Win 95+ / OSX.2+</td>
-                  <td>-</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Presto</td>
-                  <td>Opera 8.5</td>
-                  <td>Win 95+ / OSX.2+</td>
-                  <td>-</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Presto</td>
-                  <td>Opera 9.0</td>
-                  <td>Win 95+ / OSX.3+</td>
-                  <td>-</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Presto</td>
-                  <td>Opera 9.2</td>
-                  <td>Win 88+ / OSX.3+</td>
-                  <td>-</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Presto</td>
-                  <td>Opera 9.5</td>
-                  <td>Win 88+ / OSX.3+</td>
-                  <td>-</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Presto</td>
-                  <td>Opera for Wii</td>
-                  <td>Wii</td>
-                  <td>-</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Presto</td>
-                  <td>Nokia N800</td>
-                  <td>N800</td>
-                  <td>-</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Presto</td>
-                  <td>Nintendo DS browser</td>
-                  <td>Nintendo DS</td>
-                  <td>8.5</td>
-                  <td>C/A<sup>1</sup></td>
-                </tr>
-                <tr>
-                  <td>KHTML</td>
-                  <td>Konqureror 3.1</td>
-                  <td>KDE 3.1</td>
-                  <td>3.1</td>
-                  <td>C</td>
-                </tr>
-                <tr>
-                  <td>KHTML</td>
-                  <td>Konqureror 3.3</td>
-                  <td>KDE 3.3</td>
-                  <td>3.3</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>KHTML</td>
-                  <td>Konqureror 3.5</td>
-                  <td>KDE 3.5</td>
-                  <td>3.5</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Tasman</td>
-                  <td>Internet Explorer 4.5</td>
-                  <td>Mac OS 8-9</td>
-                  <td>-</td>
-                  <td>X</td>
-                </tr>
-                <tr>
-                  <td>Tasman</td>
-                  <td>Internet Explorer 5.1</td>
-                  <td>Mac OS 7.6-9</td>
-                  <td>1</td>
-                  <td>C</td>
-                </tr>
-                <tr>
-                  <td>Tasman</td>
-                  <td>Internet Explorer 5.2</td>
-                  <td>Mac OS 8-X</td>
-                  <td>1</td>
-                  <td>C</td>
-                </tr>
-                <tr>
-                  <td>Misc</td>
-                  <td>NetFront 3.1</td>
-                  <td>Embedded devices</td>
-                  <td>-</td>
-                  <td>C</td>
-                </tr>
-                <tr>
-                  <td>Misc</td>
-                  <td>NetFront 3.4</td>
-                  <td>Embedded devices</td>
-                  <td>-</td>
-                  <td>A</td>
-                </tr>
-                <tr>
-                  <td>Misc</td>
-                  <td>Dillo 0.8</td>
-                  <td>Embedded devices</td>
-                  <td>-</td>
-                  <td>X</td>
-                </tr>
-                <tr>
-                  <td>Misc</td>
-                  <td>Links</td>
-                  <td>Text only</td>
-                  <td>-</td>
-                  <td>X</td>
-                </tr>
-                <tr>
-                  <td>Misc</td>
-                  <td>Lynx</td>
-                  <td>Text only</td>
-                  <td>-</td>
-                  <td>X</td>
-                </tr>
-                <tr>
-                  <td>Misc</td>
-                  <td>IE Mobile</td>
-                  <td>Windows Mobile 6</td>
-                  <td>-</td>
-                  <td>C</td>
-                </tr>
-                <tr>
-                  <td>Misc</td>
-                  <td>PSP browser</td>
-                  <td>PSP</td>
-                  <td>-</td>
-                  <td>C</td>
-                </tr>
-                <tr>
-                  <td>Other browsers</td>
-                  <td>All others</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>U</td>
-                </tr>
+                {% endfor %}
                 </tbody>
                 <tfoot>
                 <tr>
-                  <th>Rendering engine</th>
-                  <th>Browser</th>
-                  <th>Platform(s)</th>
-                  <th>Engine version</th>
-                  <th>CSS grade</th>
+                  <th>Nom</th>
+                  <th>Titre</th>
+                  <th>Ville</th>
+                  <th>Secteur d'activité</th>
+                  <th>Experience</th>
+                  <th></th>
                 </tr>
                 </tfoot>
               </table>
@@ -523,10 +169,50 @@
             <!-- /.card-body -->
           </div>
         </div>
+
       </div>
     </div>
+    <script>
+
+
+    </script>
+
+      <script>
+        var modal = document.getElementById("myModal");
+        var span = document.getElementsByClassName("close")[0];
+        span.onclick = function() {
+              modal.style.display = "none";
+            }
+
+        function get_profile(vanityname) {
+            var inputTextValue;
+            console.log(vanityname);
+            event.preventDefault();
+            let formData = new FormData();
+            formData.append('vanityname', vanityname);
+            let csrfTokenValue = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            document.getElementById('table_search').style.display='None';
+            const request = new Request('{% url "table_search_ajax" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {'X-CSRFToken' : csrfTokenValue}
+            });
+            fetch(request)
+                .then(response => response.text())
+                .then(result => {
+                      var resultElement = document.querySelector("#result");
+                      resultElement.innerHTML=result;
+                      var modal = document.getElementById("myModal");
+                      modal.style.display = "block";
+                })
+        }
+      </script>
   </section>
   <!-- /.content -->
 </div>
 {% endblock content %}
+
+{% block javascripts %}
+{% endblock javascripts %}
 <!-- /.content-wrapper -->

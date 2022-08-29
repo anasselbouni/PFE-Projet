@@ -47,15 +47,20 @@ class mongo_manager:
         collection_name.update(query, data)
         return True
 
-    def insert_many(self,collection,data):
-        collection_name=collection
+    def insert_many(self,data):
+        collection_name=self.collection
         collection_name.insert_many(data)
         return True
 
+    def find_many(self,query):
+        collection_name=self.collection
+        data = collection_name.find(query)
+        return data
 
-    def df_to_doc(self,collection,dataframe):
+
+    def df_to_doc(self,dataframe):
         l_d=dataframe.to_dict('records')
-        self.insert_many(collection,l_d)
+        self.insert_many(self.collection,l_d)
         return True
 
 

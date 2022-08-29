@@ -5,7 +5,8 @@ import random
 from time import sleep
 from .proxy_list import get_proxies
 from LinkedinApp.models import Linkedin_Profils
-
+from datetime import datetime
+from dateutil import relativedelta
 
 class linkedin_manager:
     def __init__(self,accounts=None,industr=None,pl=None,prx=None):
@@ -16,17 +17,12 @@ class linkedin_manager:
 
     def profile_lookup(self,vanityname):
 
-        profil={'has not been lookup':vanityname}
-        print(profil)
         for account in self.accounts:
-            print(account)
-
             experience = []
             skills = []
             education = []
             try:
                 li_us=str(account['username'])
-                print(li_us)
                 li_pa=str(account['password'])
                 if self.proxy != None:
                     api = Linkedin(li_us,li_pa,proxies=self.proxy)
@@ -43,18 +39,16 @@ class linkedin_manager:
                         dataa[key] = value
                     else:
                         pass
-
                 try:
-                    dataa['location'] = prfl['geoLocationName'] + ' ' + prfl['geoCountryName'],
+                    dataa['city'] = "{} {}".format(prfl['geoLocationName'], prfl['geoCountryName']),
                 except:
                     try:
-                        dataa['location'] = prfl['geoLocationName'],
+                        dataa['city'] = "{}".format(prfl['geoLocationName']),
                     except:
                         try:
-                            dataa['location'] = prfl['geoCountryName']
+                            dataa['city'] = "{}".format(prfl['geoCountryName'])
                         except:
-                            dataa['location'] = ''
-
+                            dataa['city'] = ''
                 dataa['vanityname'] = vanityname
                 try:
                     dataa['summary'] = prfl['summary']
@@ -73,49 +67,78 @@ class linkedin_manager:
                 except:
                     dataa['Lien_Linkedin'] = ""
                 ###experience
+                exp_months = 0
                 for i in prfl["experience"]:
                     try:
                         try:
                             if None not in (i["timePeriod"]["startDate"]["month"],
                                             i["timePeriod"]["startDate"]['year']):
-                                timePeriod = ''
+                                startDate = {'year':0,'month':0,}
                             if i["timePeriod"]["startDate"]['month'] is None and \
                                     i["timePeriod"]["startDate"]['year'] is not None:
-                                timePeriod = '{}'.format(i["timePeriod"]["startDate"]['year'])
+                                startDate = {'year':i["timePeriod"]["startDate"]['year'],'month':0,}
                             if i["timePeriod"]["startDate"]['month'] is not None and \
                                     i["timePeriod"]["startDate"]['year'] is None:
-                                timePeriod = '{}'.format(i["timePeriod"]["startDate"]['month'])
+                                startDate = {'year':0,'month':i["timePeriod"]["startDate"]['month'],}
                             if i["timePeriod"]["startDate"]['month'] is not None and \
                                     i["timePeriod"]["startDate"]['year'] is not None:
-                                timePeriod = '{}/{}'.format(i["timePeriod"]["startDate"]['month'],
-                                                            i["timePeriod"]["startDate"]['year'])
+                                startDate = {'year':i["timePeriod"]["startDate"]['year'],'month':i["timePeriod"]["startDate"]['month'],}
+
                         except:
-                            timePeriod = ''
+                            startDate = {'year':0,'month':0,}
 
                         try:
                             if i["timePeriod"]["endDate"]['month'] is None and \
                                     i["timePeriod"]["endDate"]['year'] is not None:
-                                timePeriod += ' - {}'.format(i["timePeriod"]["endDate"]['year'])
+                                endDate = {'year':i["timePeriod"]["endDate"]['year'],'month':0,}
                             if i["timePeriod"]["endDate"]['month'] is not None and \
                                     i["timePeriod"]["endDate"]['year'] is not None:
-                                timePeriod += ' - {}'.format(i["timePeriod"]["endDate"]['month'])
+                                endDate = {'year':0,'month':i["timePeriod"]["endDate"]['month'],}
                             if i["timePeriod"]["endDate"]['month'] is not None and \
                                     i["timePeriod"]["endDate"]['year'] is not None:
-                                timePeriod += ' - {}/{}'.format(i["timePeriod"]["endDate"]['month'],
-                                                                i["timePeriod"]["endDate"]['year'])
+                                endDate = {'year':i["timePeriod"]["endDate"]['year'],'month':i["timePeriod"]["endDate"]['month'],}
                         except:
-                            pass
+                            endDate = {'year':0,'month':0,}
+                        d1 = '{}/{}/{}'.format(1, startDate['month'],
+                                           startDate['year'])
+                        d2 = '{}/{}/{}'.format(1, endDate['month'], endDate['year'])
+                        start_date = datetime.strptime(d1, "%d/%m/%Y")
+                        end_date = datetime.strptime(d2, "%d/%m/%Y")
 
+                        delta = relativedelta.relativedelta(end_date, start_date)
+                        exp_months = exp_months + (delta.years*12)+delta.months
+                        try:
+                            locationName = i["locationName"]
+                        except:
+                            locationName = ''
+                        try:
+                            title = i["title"]
+                        except:
+                            title = ''
+                        try:
+                            description = i["description"]
+                        except:
+                            description = ''
+                        try:
+                            companyName = i["companyName"]
+                        except:
+                            companyName = ''
                         experience.append({
-                            'title': i["title"],
-                            'locationName': i["locationName"],
-                            'description': i["description"],
-                            'companyName': i["companyName"],
-                            'timePeriod': timePeriod,
+                            'title': title,
+                            'locationName': locationName,
+                            'description': description,
+                            'companyName': companyName,
+                            'endDate': endDate,
+                            'startDate': startDate,
                         })
 
-                    except:
+
+                    except Exception as e:
+                        print(e)
                         pass
+
+                years, months = divmod(exp_months, 12)
+                total_experience = {'years': years, 'months': months}
                 ###skills
                 try:
                     for t in prfl["skills"]:
@@ -157,144 +180,25 @@ class linkedin_manager:
                     except:
                         pass
                 #
+
+
+
+
                 mydict = {"Nom": dataa["Nom"],
                           "vanityname": vanityname,
                           "summary": dataa["summary"],
+                          "location": dataa['city'][0],
                           "Lien_Linkedin": dataa["Lien_Linkedin"],
                           "industryName": dataa["industryName"],
                           "headline": dataa["headline"],
+                          "total_experience": total_experience,
                           "experience": experience,
                           "education": education,
                           "skills": skills}
                 break
-            except:
+            except :
                 mydict = {"vanityname": 0}
                 break
 
         return mydict,skills,education,experience
 
-
-    def profile_compilation(self,return_dict):
-        a, b, c, d = 0, 0, 0, 0
-        experience = pd.DataFrame()
-        skills = pd.DataFrame()
-        education = pd.DataFrame()
-        profiles = pd.DataFrame()
-        for vanityname in self.pl:
-            try:
-
-                profil = self.profile_lookup(vanityname)
-                print('pl')
-                try:
-                    location = profil['geoLocationName'] + ' ' + profil['geoCountryName'],
-                except:
-                    try:
-                        location = profil['geoLocationName'],
-                    except:
-                        try:
-                            location = profil['geoCountryName']
-                        except:
-                            location = ''
-                profiles = profiles.append(
-                    {
-                        'id': vanityname,
-                        'sector': self.industr,
-                        'Nom': profil['firstName'] + ' ' + profil['lastName'],
-                        'headline': profil['headline'],
-                        'location': location,
-                        'Lien Linkedin': ' https://www.linkedin.com/in/{}'.format(vanityname)
-                    }, ignore_index=True
-                )
-                print(profiles)
-
-                for i in profil['experience']:
-                    try:
-                        endate = ''
-                        if i['timePeriod']['endDate']['month'] == '' and i['timePeriod']['endDate']['year'] == '':
-                            endate = ''
-                        if i['timePeriod']['endDate']['month'] == '' and i['timePeriod']['endDate']['year'] != '':
-                            endate = '{}'.format(i['timePeriod']['endDate']['year'])
-                        if i['timePeriod']['endDate']['month'] != '' and i['timePeriod']['endDate']['year'] == '':
-                            endate = '{}'.format(i['timePeriod']['endDate']['month'])
-                        if i['timePeriod']['endDate']['month'] != '' and i['timePeriod']['endDate']['year'] != '':
-                            endate = '{}/{}'.format(i['timePeriod']['endDate']['month'], i['timePeriod']['endDate']['year'])
-                    except:
-                        endate = ''
-
-                    try:
-                        startDate = ''
-                        if i['timePeriod']['startDate']['month'] == '' and i['timePeriod']['startDate']['year'] == '':
-                            startDate = ''
-                        if i['timePeriod']['startDate']['month'] == '' and i['timePeriod']['startDate']['year'] != '':
-                            startDate = '{}'.format(i['timePeriod']['startDate']['year'])
-                        if i['timePeriod']['startDate']['month'] != '' and i['timePeriod']['startDate']['year'] == '':
-                            startDate = '{}'.format(i['timePeriod']['startDate']['month'])
-                        if i['timePeriod']['startDate']['month'] != '' and i['timePeriod']['startDate']['year'] != '':
-                            startDate = '{}/{}'.format(i['timePeriod']['startDate']['month'],
-                                                       i['timePeriod']['startDate']['year'])
-                    except:
-                        startDate = ''
-
-                    try:
-                        exp = i['geoLocationName']
-                    except:
-                        exp = ''
-
-                    try:
-                        companyName = i['companyName']
-                    except:
-                        companyName = ''
-
-                    experience = experience.append(
-                        {
-                            'title': i['title'],
-                            'locationName': exp,
-                            'companyName': companyName,
-                            'startdate': startDate,
-                            'endDate': endate,
-                        }, ignore_index=True
-                    )
-                for i in profil['skills']:
-                    skills = skills.append(
-                        {
-                            'skill': i['name'],
-                        }, ignore_index=True
-                    )
-                for i in profil['education']:
-                    try:
-                        endate = '{}'.format(i['timePeriod']['endDate']['year'])
-                    except:
-                        endate = ''
-                    try:
-                        degreeName = i['degreeName']
-                    except:
-                        degreeName = ''
-                    try:
-                        fieldOfStudy = i['fieldOfStudy']
-                    except:
-                        fieldOfStudy = ''
-                    try:
-                        startdate = i['timePeriod']['startDate']['year']
-                    except:
-                        startdate = ''
-                    education = education.append(
-                        {
-                            'degreeName': degreeName,
-                            'schoolName': i['schoolName'],
-                            'fieldOfStudy': fieldOfStudy,
-                            'startdate': startdate,
-                            'endDate': endate,
-                        }, ignore_index=True
-                    )
-
-
-
-
-            except:
-                pass
-            print('waiting....')
-
-            # sleep(random.randint(70,100))
-
-        return_dict[[{'experience':experience},{'education':education},{'profiles':profiles},{'skills':skills},]] = [{'experience':experience},{'education':education},{'profiles':profiles},{'skills':skills},]
-        return return_dict

@@ -1,5 +1,5 @@
+from django.contrib.auth.decorators import login_required
 import json
-
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 import pandas as pd
@@ -36,48 +36,119 @@ def converter_to_json(result_dataframe):
     data_result_all = json.loads(json_recordss)
     return data_result_all
 
-# essential entity models downloads
-nltk.downloader.download('maxent_ne_chunker')
-nltk.downloader.download('words')
-nltk.downloader.download('treebank')
-nltk.downloader.download('maxent_treebank_pos_tagger')
-nltk.downloader.download('punkt')
-nltk.download('averaged_perceptron_tagger')
 
-
-def index(request):
-    profiles = pd.read_excel(f'{BASE_DIR}/LinkedinApp/data.xlsx', index_col=0, sheet_name="profiles")
-    experience = pd.read_excel(f'{BASE_DIR}/LinkedinApp/data.xlsx', index_col=0, sheet_name="experience")
-    education = pd.read_excel(f'{BASE_DIR}/LinkedinApp/data.xlsx', index_col=0, sheet_name="education")
-    skills = pd.read_excel(f'{BASE_DIR}/LinkedinApp/data.xlsx', index_col=0, sheet_name="skills")
-    secteurs = profiles['sector'].drop_duplicates().tolist()
-    titres = profiles['headline'].drop_duplicates().tolist()
-    villes = profiles['location'].dropna().drop_duplicates().tolist()
-    diplomes = education['degreeName'].drop_duplicates().tolist()
-    context = {
-        'secteurs': secteurs,
-        'villes': villes,
-        'titres': titres,
-        'diplomes': diplomes
-    }
-    return render(request, 'index.html', context)
-
-
+@csrf_exempt
+@login_required(login_url="/login/")
 def recherche(request):
-    return render(request, 'rech.html')
-
-
-@csrf_exempt
-def compute(request):
-    keyword = request.POST.get("keyword")
-    industr = request.POST.get("Cat_services")
-
     context = {
+        'page_name': 'recherche'
     }
-    return render(request, 'result.html', context)
+    return render(request, 'rech.html', context)
 
 
 @csrf_exempt
+@login_required(login_url="/login/")
+def index(request):
+    secteurs = []
+    skills = []
+    villes = []
+
+    mongo = mongo_manager()
+    myquery = {}
+    data = mongo.find_many(myquery).limit(100)
+    table = pd.DataFrame()
+    for x in data:
+        try:
+            secteurs.append(x["industryName"])
+            villes.append(x["location"])
+            for i in x['skills']:
+                skills.append(i['name'])
+
+            table = table.append({
+                'vanityname': x["vanityname"],
+                'industryName': x["industryName"],
+                'Nom': x["Nom"],
+                'location': x["location"],
+                'Lien_Linkedin': x["Lien_Linkedin"],
+                'headline': x["headline"],
+                'total_experience': x["total_experience"],
+                'skills': x["skills"],
+            }, ignore_index=True)
+            skill = 'Recrutement IT'
+            for index, row in table.iterrows():
+                for i in row['skills']:
+                    if i['name'] == skill:
+                        print('found :',i['name'])
+        except:
+            pass
+    secteurs = list(dict.fromkeys(secteurs))
+    villes = list(dict.fromkeys(villes))
+    skills = list(dict.fromkeys(skills))
+    table_json = converter_to_json(table)
+    if request.method == 'POST':
+        secteur = request.POST['secteur']
+        ville = request.POST['ville']
+        competence = request.POST['competence']
+
+
+        # industry + city filter
+        if secteur == '' and ville == '':
+            myquery = {}
+        if secteur == '' and ville != '':
+            myquery = {'location':ville}
+        if secteur != '' and ville == '':
+            myquery = {'industryName':secteur}
+        if secteur != '' and ville != '':
+            myquery = {"$and":[{'industryName':secteur},{'location':ville}]}
+        data = mongo_manager().find_many(myquery)
+
+        table = pd.DataFrame()
+        for x in data:
+            table = table.append({
+                'vanityname': x["vanityname"],
+                'industryName': x["industryName"],
+                'Nom': x["Nom"],
+                'location': x["location"],
+                'Lien_Linkedin': x["Lien_Linkedin"],
+                'headline': x["headline"],
+                'total_experience': x["total_experience"],
+                'skills': x["skills"],
+            }, ignore_index=True)
+
+        # skills filter
+        if competence != '':
+            for inde, row in table.iterrows():
+                t = 0
+                for i in row['skills']:
+                    if i['name'] == competence:
+                        t = t + 1
+                print('t : ', t)
+                if t == 0:
+                    table = table.drop(inde)
+            print(table)
+        table_json = converter_to_json(table)
+        context = {
+            'secteurs': secteurs,
+            'villes': villes,
+            'skills': skills,
+            'data': table_json,
+            'page_name': 'index',
+        }
+
+        return render(request, 'index.html', context)
+    else:
+        context = {
+            'secteurs': secteurs,
+            'villes': villes,
+            'skills': skills,
+            'data': table_json,
+            'page_name': 'index',
+        }
+        return render(request, 'index.html', context)
+
+
+@csrf_exempt
+@login_required(login_url="/login/")
 def id_search_ajax(request):
     if request.method == 'POST':
         v_n = request.POST.get('username')
@@ -89,10 +160,10 @@ def id_search_ajax(request):
             obj = Linkedin_Profils.objects.filter(vanityname=dataa['vanityname'])
             print(obj.count())
             myquery = {"vanityname": dataa['vanityname']}
-            if obj.count() > 1:
-                mongo_manager().update(query=myquery, data=dataa)
-            else:
+            if obj.count() == 0:
                 mongo_manager().insert(data=dataa)
+            else:
+                mongo_manager().update(query=myquery, data=dataa)
         else:
             pass
 
@@ -109,17 +180,30 @@ def id_search_ajax(request):
         return HttpResponse(content='method not allowed ', status=400)
 
 
+@csrf_exempt
+@login_required(login_url="/login/")
+def table_search_ajax(request):
+    if request.method == 'POST':
 
-def sector_list(request):
-    sectors = []
-    [sectors.append(pr.sector) for pr in Linkedin_Profils.objects.all() if pr.sector not in sectors]
-    if len(sectors) > 0:
-        return JsonResponse(sectors, safe=False)
+        vanityname = request.POST['vanityname']
+        myquery = {'vanityname': vanityname}
+        data = mongo_manager().find_many(myquery)
+        dataa = data[0]
+
+        context = {
+            'dataa': data[0],
+            'experience': data[0]['experience'],
+            'skills': data[0]['skills'],
+            'education': data[0]['education']
+
+        }
+        return render(request, 'result.html', context)
     else:
-        return HttpResponse(content='no  sectors in the db search using ddg keyword', status=200)
+        return HttpResponse(content='method not allowed ', status=400)
 
 
 @csrf_exempt
+@login_required(login_url="/login/")
 def mass_search(request):
     if request.method == 'POST':
         sector = request.POST.get('sector')
@@ -128,27 +212,27 @@ def mass_search(request):
         d_m = ddg_manager('site:linkedin.com allinurl:["/in/"]', 'ma-ma')
 
         keyword += ' Morocco'
-        results = d_m.search(keyword, sector, 50)
+        results = d_m.search(keyword, sector, 200)
 
         v_n = d_m.parse('https://www.linkedin.com/in/', results)
         v_n = list(dict.fromkeys(v_n))
         nb_add = 0
         nb_found = 0
-        print(v_n)
         try:
             for i in v_n:
                 try:
                     dataa, skills, education, experience = l_m.profile_lookup(vanityname=i)
-
-                    obj = Linkedin_Profils.objects.filter(vanityname=dataa['vanityname'])
-                    print(obj.count())
-                    myquery = {"vanityname": dataa['vanityname']}
-                    if obj.count() >= 1:
+                    if dataa['vanityname'] != 0:
+                        obj = Linkedin_Profils.objects.filter(vanityname=dataa['vanityname'])
+                        myquery = {"vanityname": dataa['vanityname']}
                         nb_found = nb_found + 1
-                        mongo_manager().update(query=myquery, data=dataa)
+                        if obj.count() >= 1:
+                            mongo_manager().update(query=myquery, data=dataa)
+                        else:
+                            nb_add = nb_add + 1
+                            mongo_manager().insert(data=dataa)
                     else:
-                        nb_add = nb_add + 1
-                        mongo_manager().insert(data=dataa)
+                        pass
                 except:
                     pass
 
