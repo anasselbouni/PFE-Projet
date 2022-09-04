@@ -1,7 +1,6 @@
 from duckduckgo_search import ddg
 
-
-
+# Class pour recherche des id profiles sur duckduckgo go
 class ddg_manager:
     def __init__(self,url,region):
         self.region=region
@@ -15,6 +14,7 @@ class ddg_manager:
         except ValueError:
             return ""
 
+    #### Recherche des liens linkedin
     def search(self,keyword,industr,mr=int):
         url=self.base_url
         keywords=''
@@ -30,6 +30,8 @@ class ddg_manager:
         results = ddg(keywords, region=self.region, max_results=mr)
         return results
 
+
+    ### Extraction de vanityname de lien
     def parse(self,url,results):
         r_=[]
         d_m = ddg_manager('site:linkedin.com allinurl:["/in/"]', 'ma-ma')

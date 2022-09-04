@@ -4,16 +4,8 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 import pandas as pd
 from django.views.decorators.csrf import csrf_exempt
-from time import sleep
-from linkedin_api import Linkedin
-from bs4 import BeautifulSoup
-import nltk
-import spacy
 from .models import linkedin_account, Linkedin_Profils
 from .scripts.linkd_api import linkedin_manager
-import os
-from PFE.settings import BASE_DIR
-from collections import Counter
 from .scripts.duckduckgo import ddg_manager
 from .scripts.mongo_lib import mongo_manager
 
@@ -74,13 +66,9 @@ def index(request):
                 'total_experience': x["total_experience"],
                 'skills': x["skills"],
             }, ignore_index=True)
-            skill = 'Recrutement IT'
-            for index, row in table.iterrows():
-                for i in row['skills']:
-                    if i['name'] == skill:
-                        print('found :',i['name'])
         except:
             pass
+
     secteurs = list(dict.fromkeys(secteurs))
     villes = list(dict.fromkeys(villes))
     skills = list(dict.fromkeys(skills))
@@ -90,8 +78,7 @@ def index(request):
         ville = request.POST['ville']
         competence = request.POST['competence']
 
-
-        # industry + city filter
+        # secteur + ville filtre
         if secteur == '' and ville == '':
             myquery = {}
         if secteur == '' and ville != '':
@@ -115,7 +102,7 @@ def index(request):
                 'skills': x["skills"],
             }, ignore_index=True)
 
-        # skills filter
+        # competence filter
         if competence != '':
             for inde, row in table.iterrows():
                 t = 0
@@ -149,13 +136,13 @@ def index(request):
 
 @csrf_exempt
 @login_required(login_url="/login/")
-def id_search_ajax(request):
+def single_search(request):
     if request.method == 'POST':
-        v_n = request.POST.get('username')
+        v_n = request.POST.get('link')
         d_m = ddg_manager('site:linkedin.com allinurl:["/in/"]', 'ma-ma')
-        id = d_m.find_between_r(v_n, "https://www.linkedin.com/in/", "").replace('/', '')
+        vanityname_id = d_m.find_between_r(v_n, "https://www.linkedin.com/in/", "").replace('/', '')
+        dataa,skills,education,experience = l_m.profile_lookup(vanityname=vanityname_id)
 
-        dataa,skills,education,experience = l_m.profile_lookup(vanityname=id)
         if dataa['vanityname'] != 0:
             obj = Linkedin_Profils.objects.filter(vanityname=dataa['vanityname'])
             print(obj.count())
@@ -172,9 +159,7 @@ def id_search_ajax(request):
             'experience': experience,
             'skills': skills,
             'education': education
-
         }
-
         return render(request, 'result.html', context)
     else:
         return HttpResponse(content='method not allowed ', status=400)
@@ -184,11 +169,9 @@ def id_search_ajax(request):
 @login_required(login_url="/login/")
 def table_search_ajax(request):
     if request.method == 'POST':
-
         vanityname = request.POST['vanityname']
         myquery = {'vanityname': vanityname}
         data = mongo_manager().find_many(myquery)
-        dataa = data[0]
 
         context = {
             'dataa': data[0],

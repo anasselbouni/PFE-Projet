@@ -1,7 +1,6 @@
 import pymongo
 
-import pprint
-
+# Class pour la connection et functions de mongodb
 class mongo_manager:
     def __init__(self):
         self.connect= self.get_client('localhost',27017)

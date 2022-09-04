@@ -408,17 +408,17 @@
 
     document.querySelector("#id_search").addEventListener("click", event => {
         var inputTextValue;
-        username = document.querySelector('#link').value;
+        link = document.querySelector('#link').value;
         event.preventDefault();
         let formData = new FormData();
-        if (username == null) {
-          username = "";
+        if (link == null) {
+          link = "";
         }
-        formData.append('username', username);
+        formData.append('link', link);
         let csrfTokenValue = document.querySelector('[name=csrfmiddlewaretoken]').value;
         document.getElementById('id_search').style.display='None';
         document.getElementById('single-search').style.display='Block';
-        const request = new Request('{% url "id_search_ajax" %}', {
+        const request = new Request('{% url "single_search" %}', {
             method: 'POST',
             body: formData,
             headers: {'X-CSRFToken' : csrfTokenValue}

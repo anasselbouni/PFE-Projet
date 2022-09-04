@@ -2,15 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 from random import choice
 from selenium import webdriver
-import time
-import random
 from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
-from time import sleep
-from selenium.common.exceptions import NoSuchElementException
-import os
-from selenium.webdriver.common.by import By
 
 def get_proxies():
     proxieslist = []
