@@ -195,7 +195,7 @@ def mass_search(request):
         d_m = ddg_manager('site:linkedin.com allinurl:["/in/"]', 'ma-ma')
 
         keyword += ' Morocco'
-        results = d_m.search(keyword, sector, 200)
+        results = d_m.search(keyword, sector, 2000)
 
         v_n = d_m.parse('https://www.linkedin.com/in/', results)
         v_n = list(dict.fromkeys(v_n))
