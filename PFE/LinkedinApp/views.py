@@ -219,9 +219,10 @@ def mass_search(request):
                 except:
                     pass
 
-                res = {"nb_add": nb_add, 'nb_found': nb_found,'success': 'done', }
+            res = {"nb_add": nb_add, 'nb_found': nb_found,'success': 'done', }
             return JsonResponse(res, safe=False)
         except:
+            res = {"nb_add": 0, 'nb_found': 0, 'success': 'error', }
             return JsonResponse(res,safe=False)
     else:
         res = {"nb_add": 0, 'nb_found': 0, 'success': 'error', }

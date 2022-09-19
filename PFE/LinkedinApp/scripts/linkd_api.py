@@ -23,10 +23,7 @@ class linkedin_manager:
                 ##### Extraction de profile
                 li_us = str(account['username'])
                 li_pa = str(account['password'])
-                if self.proxy != None:
-                    api = Linkedin(li_us, li_pa, proxies=self.proxy)
-                else:
-                    api = Linkedin(li_us, li_pa)
+                api = Linkedin(li_us, li_pa)
 
                 prfl = api.get_profile(vanityname)
 

@@ -27,6 +27,7 @@ class ddg_manager:
 
         keywo = 'Bella Ciao'
         test = ddg(keywo, region='wt-wt', safesearch='Moderate', time='y', max_results=28)
+
         results = ddg(keywords, region=self.region, max_results=mr)
         return results
 

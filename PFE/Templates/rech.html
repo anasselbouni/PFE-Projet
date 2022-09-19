@@ -2,7 +2,96 @@
 {% block title %} recherche {% endblock %}
 <!-- Content Wrapper. Contains page content -->
 {% block content %}
+<style>
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  background: linear-gradient(0deg, rgba(255, 61, 0, 0.2) 33%, #ff3d00 100%);
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+.loader::after {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #f4f6f9;
+}
+@keyframes rotation {
+  0% { transform: rotate(0deg) }
+  100% { transform: rotate(360deg)}
+}
 
+
+
+
+.info-msg,
+.success-msg,
+.warning-msg,
+.error-msg {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 3px 3px 3px 3px;
+}
+.info-msg {
+  color: #059;
+  background-color: #BEF;
+}
+.success-msg {
+  color: #270;
+  background-color: #DFF2BF;
+}
+.warning-msg {
+  color: #9F6000;
+  background-color: #FEEFB3;
+}
+.error-msg {
+  color: #D8000C;
+  background-color: #FFBABA;
+}
+
+
+.button-13 {
+  background-color: #fff;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  box-sizing: border-box;
+  color: #0f1111;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Amazon Ember",sans-serif;
+  font-size: 13px;
+  line-height: 29px;
+  padding: 0 10px 0 11px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  width: 100px;
+}
+
+.button-13:hover {
+  background-color: #f7fafa;
+}
+
+.button-13:focus {
+  border-color: #008296;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  outline: 0;
+}
+</style>
 <div class="content-wrapper" style="min-height: 1388.5px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -46,7 +135,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-5 offset-md-1">
+                            <div class="col-md-2 offset-md-1">
                                 <div class="form-group">
                                     <div class="input-group input-group-lg" style="flex-direction: column;">
                                         <input id="id_search" type="submit" value="Recherche" class="button-13"><span id="single-search" style="display:None;" class="loader"></span>
@@ -232,9 +321,7 @@
                             <div class="col-md-3 offset-md-1">
                                 <div class="form-group">
                                     <div class="input-group input-group-lg">
-                                        <div class="input-group-append">
-                                            <input id="ajax-call" type="submit" value="Recherche" class="button-13"><span id="mass-search" style="display:None;" class="loader"></span>
-                                        </div>
+                                        <input id="ajax-call" type="submit" value="Recherche" class="button-13"><span id="mass-search" style="display:None;" class="loader"></span>
                                     </div>
                                 </div>
                             </div>
