@@ -1,0 +1,4 @@
+cred.json
+venv/
+PFE/config/cred.json
+*.pyc

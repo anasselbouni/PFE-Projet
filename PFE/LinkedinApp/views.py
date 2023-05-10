@@ -142,7 +142,7 @@ def single_search(request):
         d_m = ddg_manager('site:linkedin.com allinurl:["/in/"]', 'ma-ma')
         vanityname_id = d_m.find_between_r(v_n, "https://www.linkedin.com/in/", "").replace('/', '')
         dataa,skills,education,experience = l_m.profile_lookup(vanityname=vanityname_id)
-
+        print(dataa,skills,education,experience)
         if dataa['vanityname'] != 0:
             obj = Linkedin_Profils.objects.filter(vanityname=dataa['vanityname'])
             print(obj.count())
@@ -198,26 +198,38 @@ def mass_search(request):
         results = d_m.search(keyword, sector, 2000)
 
         v_n = d_m.parse('https://www.linkedin.com/in/', results)
-        v_n = list(dict.fromkeys(v_n))
+        # v_n = list(dict.fromkeys(v_n))
+
         nb_add = 0
         nb_found = 0
         try:
             for i in v_n:
-                try:
-                    dataa, skills, education, experience = l_m.profile_lookup(vanityname=i)
-                    if dataa['vanityname'] != 0:
-                        obj = Linkedin_Profils.objects.filter(vanityname=dataa['vanityname'])
-                        myquery = {"vanityname": dataa['vanityname']}
-                        nb_found = nb_found + 1
-                        if obj.count() >= 1:
-                            mongo_manager().update(query=myquery, data=dataa)
-                        else:
-                            nb_add = nb_add + 1
-                            mongo_manager().insert(data=dataa)
-                    else:
-                        pass
-                except:
+                v=i.split('/in/')
+                v2=i.split('/company/')
+
+                if len(v) == 2:
+                    r=v[-1]
+                elif len(v2) ==2:
+                    r=v2[-1]
+                else:
                     pass
+                print (r)
+
+
+            dataa, skills, education, experience = l_m.profile_lookup(vanityname=r)
+            print (dataa)
+            if dataa['vanityname'] != 0:
+                obj = Linkedin_Profils.objects.filter(vanityname=dataa['vanityname'])
+                myquery = {"vanityname": dataa['vanityname']}
+                nb_found = nb_found + 1
+                if obj.count() >= 1:
+                    mongo_manager().update(query=myquery, data=dataa)
+                else:
+                    nb_add = nb_add + 1
+                    mongo_manager().insert(data=dataa)
+            else:
+                pass
+
 
             res = {"nb_add": nb_add, 'nb_found': nb_found,'success': 'done', }
             return JsonResponse(res, safe=False)

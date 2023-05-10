@@ -13,6 +13,11 @@ class linkedin_manager:
         self.proxy = prx
 
     def profile_lookup(self, vanityname):
+        mydict={}
+        skills = []
+        education = []  
+        experience = []
+
 
         for account in self.accounts:
             experience = []
@@ -24,8 +29,8 @@ class linkedin_manager:
                 li_us = str(account['username'])
                 li_pa = str(account['password'])
                 api = Linkedin(li_us, li_pa)
-
                 prfl = api.get_profile(vanityname)
+                print(prfl)
 
                 ##### Nettoyage et préparation des données
                 l = [f.name for f in Linkedin_Profils._meta.get_fields()]
@@ -192,5 +197,5 @@ class linkedin_manager:
             except:
                 mydict = {"vanityname": 0}
                 break
-
+        
         return mydict, skills, education, experience

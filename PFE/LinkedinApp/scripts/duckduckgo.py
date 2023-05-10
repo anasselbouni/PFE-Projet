@@ -37,9 +37,12 @@ class ddg_manager:
         r_=[]
         d_m = ddg_manager('site:linkedin.com allinurl:["/in/"]', 'ma-ma')
         for td in results:
+            
             href = d_m.find_between_r(td['href'], url, "")
-            if href != '':
-                r_.append(href)
+            print(href)
+
+            if td['href'] != '':
+                r_.append(td['href'])
             else:pass
         return r_
 
