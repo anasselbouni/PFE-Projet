@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
-
+import json
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'PFE.wsgi.application'
 DATABASES = {
        'default': {
            'ENGINE': 'djongo',
-           'NAME': 'mongo',
+           'NAME': 'linkedin',
        }
    }
 
@@ -135,5 +135,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'aricabdou@gmail.com'
-EMAIL_HOST_PASSWORD = 'PQPQibr**35'
+cred=open(os.path.join(BASE_DIR, "config/cred.json"), 'r')
+js=json.load(cred)
+EMAIL_HOST_USER = js['email_host']
+EMAIL_HOST_PASSWORD = js['email_host_password']
